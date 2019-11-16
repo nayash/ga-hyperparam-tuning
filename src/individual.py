@@ -20,11 +20,11 @@ from keras.layers import Dense, Dropout
 
 
 class Individual:
-    def __init__(self, nn_prams, **kwargs):
+    def __init__(self, nn_prams: dict, **kwargs):
         self.nn_params = nn_prams
         self.func_model = kwargs['func_model'] if 'func_model' in kwargs else self.create_model
         self.__model = self.func_model(nn_prams)
-        self.__fitness_score = {}
+        self.__fitness_score = 0.0
 
     def create_model(self, params: dict = None):
         """
@@ -41,11 +41,12 @@ class Individual:
 
         num_layers = 0
         for key in params.keys():
-            print("key", key)
             if key.startswith('nodes_'):
                 num_layers = num_layers + 1
+
         if num_layers == 0:
             raise Exception("Please specify number of nodes for each layer using format nodes_{layer_number}")
+
         model = Sequential()
         for i in range(num_layers):
             i = str(i + 1)

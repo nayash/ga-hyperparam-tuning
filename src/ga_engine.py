@@ -15,22 +15,34 @@ import numpy as np
 
 
 class GAEngine(GAAbstract):
-    def __init__(self, length=5, population_size=10, mutation_probability=0.2):
-        if population_size < 2:
+    """
+    GAEngine drives the whole algorithm that finds optimal solution for the problem.
+    :param search_space: search domain to limit the search for optimal hyperparameters for Neural Net. Example can be
+    found in main.py
+    :param kwargs: list of optional arguments:
+    population_size: number individuals in the population to choose parents (default = 5)
+    mutation_probability: probability for mutation to occur. Should be low (default = 0.2)
+    func_should_exit: function to check exit condition and return True to stop the search
+    on_generation_end: called on end of each generation
+    """
+
+    def __init__(self, search_space, **kwargs):
+        self.population_size = kwargs['population_size'] if 'population_size' in kwargs else 5
+        self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.2
+        self.func_should_exit = kwargs['func_should_exit'] if 'func_should_exit' in kwargs else self.should_exit()
+        self.search_space = search_space
+        if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
-        self.population_size = population_size
-        self.individual_size = length
-        self.mutation_probability = mutation_probability
-        self._target = Individual(length, list(np.ones((length, ), dtype=int)))
-        self._population = Population(self.target, population_size)
+        self._population = Population(self.search_space, kwargs['func_eval'], self.population_size)
+        self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else None
 
     @property
     def target(self):
-        return self._target
+        pass
 
     @target.setter
     def target(self, target):
-        self._target = target
+        pass
 
     @property
     def population(self):
