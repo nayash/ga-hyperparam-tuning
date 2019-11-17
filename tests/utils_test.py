@@ -1,7 +1,10 @@
-import numpy as np
-from utils import *
+from src.utils import *
+import unittest
 
-search_space = {
+
+class UtilsTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.search_space = {
             'input_size': 784,
             'batch_size': [80, 100, 120],
             'layers': [
@@ -41,7 +44,10 @@ search_space = {
             'loss': 'categorical_crossentropy'
         }
 
-assert get_key_in_nested_dict(search_space, 'batch_size') == [80, 100, 120]
-print(get_key_in_nested_dict(search_space, 'nodes_1'))
-assert get_key_in_nested_dict(search_space, 'nodes_1') == [50, 100, 200, 300, 500, 700, 900]
-assert get_key_in_nested_dict(search_space, 'activation_3') == ['relu', 'sigmoid']
+    def test_get_key_in_nested_dict(self):
+        self.assertEqual(get_key_in_nested_dict(self.search_space, 'batch_size'), [80, 100, 120])
+        self.assertEqual(get_key_in_nested_dict(self.search_space, 'nodes_1'), [50, 100, 200, 300, 500, 700, 900])
+        self.assertEqual(get_key_in_nested_dict(self.search_space, 'activation_3'), ['relu', 'sigmoid'])
+
+    def tearDown(self) -> None:
+        pass

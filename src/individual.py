@@ -21,7 +21,7 @@ from keras.layers import Dense, Dropout
 
 class Individual:
     def __init__(self, nn_prams: dict, **kwargs):
-        self.nn_params = nn_prams
+        self.__nn_params = nn_prams
         self.func_model = kwargs['func_model'] if 'func_model' in kwargs else self.create_model
         self.__model = self.func_model(nn_prams)
         self.__fitness_score = 0.0
@@ -76,3 +76,9 @@ class Individual:
 
     def set_model(self, params):
         self.__model = self.func_model(params)
+
+    def set_nn_params(self, nn_params):
+        self.__nn_params = nn_params
+
+    def get_nn_params(self):
+        return self.__nn_params

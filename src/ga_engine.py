@@ -57,6 +57,8 @@ class GAEngine(GAAbstract):
         return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank)
 
     def mutation(self, individual):
+        params = individual.get_nn_params()
+        mutation_key = list(params.keys())[np.random.randint(0, len(params.keys()))]
         mutation_index = np.random.randint(0, len(self.target.get_value()))
         value = individual.get_value()
         value[mutation_index] = (int) (not value[mutation_index])

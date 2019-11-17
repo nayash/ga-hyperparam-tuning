@@ -14,7 +14,7 @@ import numpy as np
 search_space_mlp = {
             'input_size': 784,
             'batch_size': [80, 100, 120],
-            'num_layers': [
+            'layers': [
                 {
                     'nodes_1': [50, 100, 200, 300, 500, 700, 900],
                     'do_1': [0.0, 0.1, 0.2, 0.3, 0.4],
