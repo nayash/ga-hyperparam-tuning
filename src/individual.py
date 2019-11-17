@@ -52,14 +52,14 @@ class Individual:
             i = str(i + 1)
             if i == '1':
                 model.add(
-                    Dense(params["nodes_" + i], input_shape=(params['input_size'], ), activation=params['activation_' + i] if ('activation_' + i) in params
+                    Dense(params["nodes_layer_" + i], input_shape=(params['input_size'], ), activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                           else None))
             else:
                 model.add(
-                    Dense(params["nodes_" + i], activation=params['activation_' + i] if ('activation_' + i) in params
+                    Dense(params["nodes_layer_" + i], activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                           else None))
-            if 'do_' + i in params:
-                model.add(Dropout(params['do_' + i]))
+            if 'do_layer_' + i in params:
+                model.add(Dropout(params['do_layer_' + i]))
 
         model.add(Dense(params['output_nodes'], activation=params['output_activation']))
         model.compile(loss=params['loss'], optimizer=params["optimizer"])  # TODO metric

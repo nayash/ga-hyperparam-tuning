@@ -11,6 +11,7 @@
 from ga_abstract import GAAbstract
 from population import Population
 from individual import Individual
+from utils import *
 import numpy as np
 
 
@@ -24,6 +25,7 @@ class GAEngine(GAAbstract):
     mutation_probability: probability for mutation to occur. Should be low (default = 0.2)
     func_should_exit: function to check exit condition and return True to stop the search
     on_generation_end: called on end of each generation
+    opt_mode: optimization mode ['min', 'max'] default 'min'
     """
 
     def __init__(self, search_space, **kwargs):
@@ -35,6 +37,7 @@ class GAEngine(GAAbstract):
             raise Exception("Need at least 2 individuals to compare")
         self._population = Population(self.search_space, kwargs['func_eval'], self.population_size)
         self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else None
+        self.opt_mode = kwargs['opt_mode'] if 'opt_mode' in kwargs else 'min'
 
     @property
     def target(self):
@@ -54,15 +57,16 @@ class GAEngine(GAAbstract):
 
     def selection(self):
         second_parent_rank = np.random.randint(1, min(5, self.population_size))
-        return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank)
+        return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank),\
+               second_parent_rank
 
     def mutation(self, individual):
         params = individual.get_nn_params()
         mutation_key = list(params.keys())[np.random.randint(0, len(params.keys()))]
-        mutation_index = np.random.randint(0, len(self.target.get_value()))
-        value = individual.get_value()
-        value[mutation_index] = (int) (not value[mutation_index])
-        individual.set_value(value)
+        values = get_key_in_nested_dict(self.search_space, mutation_key)
+        mutation_value_index = np.random.randint(0, len(values))
+        params[mutation_key] = values[mutation_value_index]
+        individual.set_nn_params(params)
         return individual
 
     def cross_over(self, individual1, individual2, individual1_part=None, individual2_part=None):

@@ -42,6 +42,7 @@ search_space = {
         }
 
 assert get_key_in_nested_dict(search_space, 'batch_size') == [80, 100, 120]
-print(get_key_in_nested_dict(search_space, 'nodes_1'))
+assert get_key_in_nested_dict(search_space, 'nodes_3') == [100, 300, 500, 700, 900]
+# print(get_key_in_nested_dict(search_space, 'activation_3'))
 assert get_key_in_nested_dict(search_space, 'nodes_1') == [50, 100, 200, 300, 500, 700, 900]
 assert get_key_in_nested_dict(search_space, 'activation_3') == ['relu', 'sigmoid']

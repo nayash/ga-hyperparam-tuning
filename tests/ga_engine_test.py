@@ -1,11 +1,13 @@
 import sys
 sys.path.append('../src')
-
-from src.utils import *
 import unittest
+import numpy as np
+from src.ga_engine import GAEngine
+from src.population import Population
+from src.individual import Individual
 
 
-class UtilsTest(unittest.TestCase):
+class GAEngineTest(unittest.TestCase):
     def setUp(self) -> None:
         self.search_space = {
             'input_size': 784,
@@ -46,11 +48,22 @@ class UtilsTest(unittest.TestCase):
             'output_activation': 'softmax',
             'loss': 'categorical_crossentropy'
         }
+        self.ga_engine = GAEngine(self.search_space, func_eval=self.dummy_func_eval())
+        self.scores = [-0.1, -0.01, -0.005, -0.2, -0.03]
+        self.ga_engine.population.set_fitness_scores(self.scores)
 
-    def test_get_key_in_nested_dict(self):
-        self.assertEqual(get_key_in_nested_dict(self.search_space, 'batch_size'), [80, 100, 120])
-        self.assertEqual(get_key_in_nested_dict(self.search_space, 'nodes_layer_1'), [50, 100, 200, 300, 500, 700, 900])
-        self.assertEqual(get_key_in_nested_dict(self.search_space, 'activation_layer_3'), ['relu', 'sigmoid'])
+    def test_selection(self):
+        self.assertEqual(self.ga_engine.selection()[0].get_fitness_score(), -0.005)
+        second_parent_rank = self.ga_engine.selection()[2]
+        self.assertEqual(self.ga_engine.population.individuals[second_parent_rank].get_fitness_score(),
+                         self.scores[second_parent_rank])
 
-    def tearDown(self) -> None:
+    def test_mutation(self):
+        print("individual 0:", self.ga_engine.population.individuals[0].get_nn_params())
+        print(self.ga_engine.mutation(self.ga_engine.population.individuals[0]).get_nn_params())
+
+        print("individual 2:", self.ga_engine.population.individuals[2].get_nn_params())
+        print(self.ga_engine.mutation(self.ga_engine.population.individuals[2]).get_nn_params())
+
+    def dummy_func_eval(self):
         pass
