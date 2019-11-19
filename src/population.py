@@ -8,6 +8,7 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
 
+from utils import *
 import numpy as np
 from individual import Individual
 
@@ -21,7 +22,7 @@ class Population:
         self.func_eval = func_eval
         self.mode = mode
         if individuals is None:
-            self.individuals = [Individual(self.choose_from_search_space(search_space)) for i in range(population_size)]
+            self.individuals = [Individual(choose_from_search_space(search_space)) for i in range(population_size)]
         else:
             if not (population_size == len(individuals)):
                 raise Exception("population size and length of individuals passed are different")
@@ -58,17 +59,6 @@ class Population:
         self.__fitness_scores[worst_index] = new_individual.get_fitness_score()
         self.individuals[worst_index] = new_individual
         # print("add_individual", worst_index, self.get_individual_values_as_list(), self.fitness_scores)
-
-    def choose_from_search_space(self, search_space_mlp: dict, key="params", params={}):
-        if type(search_space_mlp) is dict:
-            keys = search_space_mlp.keys()
-            for key in keys:
-                self.choose_from_search_space(search_space_mlp[key], key, params)
-        elif type(search_space_mlp) is list:  # or type(search_space_mlp) is tuple:
-            self.choose_from_search_space(search_space_mlp[np.random.randint(0, len(search_space_mlp))], key, params)
-        else:
-            params[key] = search_space_mlp
-        return params
 
     def set_fitness_scores(self, scores):
         self.__fitness_scores = scores

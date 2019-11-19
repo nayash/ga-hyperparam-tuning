@@ -51,6 +51,7 @@ class UtilsTest(unittest.TestCase):
         self.assertEqual(get_key_in_nested_dict(self.search_space, 'batch_size'), [80, 100, 120])
         self.assertEqual(get_key_in_nested_dict(self.search_space, 'nodes_layer_1'), [50, 100, 200, 300, 500, 700, 900])
         self.assertEqual(get_key_in_nested_dict(self.search_space, 'activation_layer_3'), ['relu', 'sigmoid'])
+        print(choose_from_search_space(get_key_in_nested_dict(self.search_space, 'layers')))
 
     def tearDown(self) -> None:
         pass

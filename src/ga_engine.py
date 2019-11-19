@@ -13,6 +13,7 @@ from population import Population
 from individual import Individual
 from utils import *
 import numpy as np
+from operator import itemgetter
 
 
 class GAEngine(GAAbstract):
@@ -63,58 +64,79 @@ class GAEngine(GAAbstract):
     def mutation(self, individual):
         params = individual.get_nn_params()
         mutation_key = list(params.keys())[np.random.randint(0, len(params.keys()))]
-        values = get_key_in_nested_dict(self.search_space, mutation_key)
-        mutation_value_index = np.random.randint(0, len(values))
-        params[mutation_key] = values[mutation_value_index]
-        individual.set_nn_params(params)
+        # TODO if secondary mutation prob < 0.5 and mutation_key == 'layer type' completely mutate layer params
+        if np.random.uniform(0, 1) < 0.5 and "layer_" in mutation_key:
+            params.update(choose_from_search_space(get_key_in_nested_dict(self.search_space, "layers")))
+            individual.set_nn_params(params)
+        else:
+            values = get_key_in_nested_dict(self.search_space, mutation_key)
+            mutation_value_index = np.random.randint(0, len(values))
+            params[mutation_key] = values[mutation_value_index]
+            individual.set_nn_params(params)
         return individual
 
-    def cross_over(self, individual1, individual2, individual1_part=None, individual2_part=None):
-        if not individual1_part:
-            individual1_part = sorted(np.random.randint(0, self.individual_size, 2))
-        part_size = individual1_part[1] - individual1_part[0]
-        if not individual2_part:
-            individual2_part = [None, None]
-            individual2_part[0] = np.random.randint(0, self.individual_size-part_size, 1)[0]
-            individual2_part[1] = individual2_part[0] + part_size
-        value1 = individual1.get_value()
-        value2 = individual2.get_value()
-        value1[individual1_part[0]:individual1_part[1]] = value2[individual2_part[0]:individual2_part[1]]
-        individual1.set_value(value1)
-        return individual1
+    def cross_over(self, individual1: Individual, individual2: Individual, individual1_part=None,
+                   individual2_part=None):
+        ind1_params = individual1.get_nn_params()
+        ind2_params = individual2.get_nn_params()
+        l1 = filter_list_by_prefix(list(ind1_params.keys()), ("input", "output"), True)
+        l2 = filter_list_by_prefix(list(ind2_params.keys()), ("input", "output"), True)
+        portion1 = itemgetter(*np.random.randint(0, len(l1), 5))(l1)
+        portion2 = itemgetter(*np.random.randint(0, len(l2), 5))(l2)
+        common_portion = list(set(portion1).intersection(l2))
+        if len(common_portion) == 0:
+            self.cross_over(individual1, individual2)
+        # swap parent attributes
+        log("properties being crossed over:", common_portion)
+        for key in common_portion:
+            temp = ind1_params[key]
+            ind1_params[key] = ind2_params[key]
+            ind2_params[key] = temp
+
+        individual1.set_nn_params(ind1_params)
+        individual2.set_nn_params(ind2_params)
+        return individual1, individual2
 
     def run(self, only_mutation=False):
         count = 0
+        best_score = -np.inf
         while True:
             # selection
-            (parent1, best_score), (parent2, parent2_score) = self.selection()
-            cross_over_prob, mutation_prob = np.random.uniform(0, 1, 2)
+            parent1, parent2, second_parent_rank = self.selection()
+            mutation_prob = np.random.uniform(0, 1)
             child = None
+
             # cross over
             if not only_mutation:
-                child = self.cross_over(parent1, parent2)
-                fitness = self.population.calc_fitness_score(self.target, child)
+                child1, child2 = self.cross_over(parent1, parent2)
+                fitness1 = self.population.calc_fitness_score(child1)
+                fitness2 = self.population.calc_fitness_score(child2)
 
             # mutate
             if mutation_prob < self.mutation_probability or only_mutation:
-                child = self.mutation(parent1 if not child else child)
-                fitness = self.population.calc_fitness_score(self.target, child)
+                child1 = self.mutation(parent1 if not child1 else child1)
+                child2 = self.mutation(parent2 if not child2 else child2)
+                fitness1 = self.population.calc_fitness_score(child1)
+                fitness2 = self.population.calc_fitness_score(child2)
 
-            if fitness > best_score:
-                self.population.add_individual(child, fitness)
-                # print("new best found: {}, {}".format(child.get_value(), fitness))
+            if fitness1 > best_score:
+                self.population.add_individual(child1, fitness1)
+            if fitness2 > best_score:
+                self.population.add_individual(child2, fitness2)
+            best_score = max(fitness1, fitness2)
+            # print("new best found: {}, {}".format(child.get_value(), fitness))
 
-            if fitness == len(self.target.get_value()):
+            if self.func_should_exit(best_score):
                 break
             count = count + 1
-            if count%500 == 0:
+            if count%10 == 0:
                 print("Generation :", count)
         print("Best individual is {} and target is {}; generations = {}".format(child.get_value(),
                                                                                 self.target.get_value(), count))
         return count
 
-    def should_exit(self):
-        pass
+    def should_exit(self, best_score):
+        return np.abs(best_score) < 0.1
 
 
 
