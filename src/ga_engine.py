@@ -24,7 +24,7 @@ class GAEngine(GAAbstract):
     :param kwargs: list of optional arguments:
     population_size: number individuals in the population to choose parents (default = 5)
     mutation_probability: probability for mutation to occur. Should be low (default = 0.2)
-    func_should_exit: function to check exit condition and return True to stop the search
+    exit_check: function to check exit condition and return True to stop the search
     on_generation_end: called on end of each generation
     opt_mode: optimization mode ['min', 'max'] default 'min'
     """
@@ -32,12 +32,13 @@ class GAEngine(GAAbstract):
     def __init__(self, search_space, **kwargs):
         self.population_size = kwargs['population_size'] if 'population_size' in kwargs else 5
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.2
-        self.func_should_exit = kwargs['func_should_exit'] if 'func_should_exit' in kwargs else self.should_exit()
+        self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit()
         self.search_space = search_space
         if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
         self._population = Population(self.search_space, kwargs['func_eval'], self.population_size)
-        self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else None
+        self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else \
+            self.on_generation_end_dummy()
         self.opt_mode = kwargs['opt_mode'] if 'opt_mode' in kwargs else 'min'
 
     @property
@@ -59,7 +60,10 @@ class GAEngine(GAAbstract):
     def selection(self):
         second_parent_rank = np.random.randint(1, min(5, self.population_size))
         return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank),\
-               second_parent_rank
+            second_parent_rank
+
+    def on_generation_end_dummy(self, *args):
+        pass
 
     def mutation(self, individual):
         params = individual.get_nn_params()
@@ -99,7 +103,8 @@ class GAEngine(GAAbstract):
 
     def run(self, only_mutation=False):
         count = 0
-        best_score = -np.inf
+        mul = -1 if self.mode == 'min' else 1
+        best_score = mul * np.inf
         while True:
             # selection
             parent1, parent2, second_parent_rank = self.selection()
@@ -126,6 +131,7 @@ class GAEngine(GAAbstract):
             best_score = max(fitness1, fitness2)
             # print("new best found: {}, {}".format(child.get_value(), fitness))
 
+            self.on_generation_end(best_score, count)
             if self.func_should_exit(best_score):
                 break
             count = count + 1
