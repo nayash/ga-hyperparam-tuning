@@ -15,19 +15,23 @@ def get_key_in_nested_dict(nested_dict, target_key):
                         return res
 
 
-def choose_from_search_space(search_space_mlp: dict, key="params", params={}):
+def choose_from_search_space(search_space_mlp: dict, key=None, params={}):
     if type(search_space_mlp) is dict:
         keys = search_space_mlp.keys()
         for key in keys:
-            choose_from_search_space(search_space_mlp[key], key, params)
+            params = choose_from_search_space(search_space_mlp[key], key, params)
     elif type(search_space_mlp) is list:  # or type(search_space_mlp) is tuple:
-        choose_from_search_space(search_space_mlp[np.random.randint(0, len(search_space_mlp))], key, params)
+        params = choose_from_search_space(search_space_mlp[np.random.randint(0, len(search_space_mlp))], key, params)
     else:
-        params[key] = search_space_mlp
+        if key:
+            params[key] = search_space_mlp
+        else:  # the search_space passed is not dict
+            params = search_space_mlp  # result is not dict
+    # print("choose_from_search: ",params)
     return params
 
 
-def filter_list_by_prefix(_list, prefix, negation: bool):
+def filter_list_by_prefix(_list, prefix, negation: bool = False):
     if negation:
         return [item for item in _list if not item.startswith(prefix)]
     else:

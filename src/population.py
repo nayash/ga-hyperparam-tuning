@@ -11,6 +11,7 @@
 from utils import *
 import numpy as np
 from individual import Individual
+from copy import deepcopy
 
 # TODO accept function as param for evaluate_model
 
@@ -21,8 +22,10 @@ class Population:
         self.population_size = population_size
         self.func_eval = func_eval
         self.mode = mode
+        self.individuals = [None] * population_size
         if individuals is None:
-            self.individuals = [Individual(choose_from_search_space(search_space)) for i in range(population_size)]
+            self.individuals = [deepcopy(Individual(choose_from_search_space(search_space))) for i in
+                                range(population_size)]
         else:
             if not (population_size == len(individuals)):
                 raise Exception("population size and length of individuals passed are different")

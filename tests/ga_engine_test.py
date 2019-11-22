@@ -51,6 +51,8 @@ class GAEngineTest(unittest.TestCase):
         self.ga_engine = GAEngine(self.search_space, func_eval=self.dummy_func_eval())
         self.scores = [-0.1, -0.01, -0.005, -0.2, -0.03]
         self.ga_engine.population.set_fitness_scores(self.scores)
+        # print("setup", self.ga_engine.population.individuals[0].get_nn_params(), "\n",
+        #       self.ga_engine.population.individuals[3].get_nn_params())
 
     def test_selection(self):
         self.assertEqual(self.ga_engine.selection()[0].get_fitness_score(), -0.005)
@@ -64,6 +66,18 @@ class GAEngineTest(unittest.TestCase):
 
         print("individual 2:", self.ga_engine.population.individuals[2].get_nn_params())
         print(self.ga_engine.mutation(self.ga_engine.population.individuals[2]).get_nn_params())
+
+    def test_cross_over(self):
+        i1 = 0
+        i2 = 3
+        print("test_cross_over")
+        print(self.ga_engine.population.individuals[i1].get_nn_params(), "\n\n",
+              self.ga_engine.population.individuals[i2].get_nn_params())
+        ind1, ind2 = self.ga_engine.cross_over(self.ga_engine.population.individuals[i1],
+                                              self.ga_engine.population.individuals[i2])
+        print("-------------------------------------------------------------------------------------------------------")
+        print(ind1.get_nn_params(), "\n\n", ind2.get_nn_params())
+        print("test_cross_over end")
 
     def dummy_func_eval(self):
         pass

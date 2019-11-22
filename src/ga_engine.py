@@ -32,7 +32,7 @@ class GAEngine(GAAbstract):
     def __init__(self, search_space, **kwargs):
         self.population_size = kwargs['population_size'] if 'population_size' in kwargs else 5
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.2
-        self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit()
+        self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
         self.search_space = search_space
         if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
@@ -67,16 +67,20 @@ class GAEngine(GAAbstract):
 
     def mutation(self, individual):
         params = individual.get_nn_params()
-        mutation_key = list(params.keys())[np.random.randint(0, len(params.keys()))]
+        keys = filter_list_by_prefix(list(params.keys()), ("input", "output"), True)
+        mutation_key = list(keys)[np.random.randint(0, len(keys))]
+        print("mutate_key", mutation_key)
         # TODO if secondary mutation prob < 0.5 and mutation_key == 'layer type' completely mutate layer params
         if np.random.uniform(0, 1) < 0.5 and "layer_" in mutation_key:
             params.update(choose_from_search_space(get_key_in_nested_dict(self.search_space, "layers")))
             individual.set_nn_params(params)
+            print("complete_layer_mutate", params)
         else:
             values = get_key_in_nested_dict(self.search_space, mutation_key)
             mutation_value_index = np.random.randint(0, len(values))
             params[mutation_key] = values[mutation_value_index]
             individual.set_nn_params(params)
+            print("plain_mutate", params)
         return individual
 
     def cross_over(self, individual1: Individual, individual2: Individual, individual1_part=None,
@@ -91,7 +95,7 @@ class GAEngine(GAAbstract):
         if len(common_portion) == 0:
             self.cross_over(individual1, individual2)
         # swap parent attributes
-        log("properties being crossed over:", common_portion)
+        log("properties being crossed over:", str(common_portion))
         for key in common_portion:
             temp = ind1_params[key]
             ind1_params[key] = ind2_params[key]
