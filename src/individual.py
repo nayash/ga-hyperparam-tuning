@@ -84,5 +84,5 @@ class Individual:
     def get_nn_params(self):
         return self.__nn_params
 
-    def __eq__(self, other):
-        return self.__nn_params == other.get_nn_params() and self.__fitness_score == other.get_fitness_score()
+    # def __eq__(self, other):
+    #     return self.__nn_params == other.get_nn_params() and self.__fitness_score == other.get_fitness_score()

@@ -76,10 +76,10 @@ class PopulationTest(unittest.TestCase):
         print("scores_b4_adding", self.population.get_fitness_scores())
         new_individual = Individual(choose_from_search_space(self.search_space))
         new_individual.set_fitness_score(0.01978)
-        if self.mode == 'min':
-            worst_index = np.argmin(self.population.get_fitness_scores())
-        else:
-            worst_index = np.argmax(self.population.get_fitness_scores())
+        worst_index = np.argmin(self.population.get_fitness_scores())
+        print(worst_index)
+        print("new_params", new_individual.get_nn_params())
+        print("worst_param", self.population.individuals[worst_index].get_nn_params())
         self.population.add_individual(new_individual, new_individual.get_fitness_score())
         print("scores_after_adding", self.population.get_fitness_scores())
         self.assertEqual(self.population.individuals[worst_index], new_individual)

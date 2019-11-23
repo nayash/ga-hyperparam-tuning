@@ -59,6 +59,8 @@ class Population:
             new_individual.set_fitness_score(self.calc_fitness_score(new_individual))
         else:
             new_individual.set_fitness_score(fitness_score)
+        print(worst_index)
+        print("add_ind", self.individuals[worst_index].get_nn_params())
         self.__fitness_scores[worst_index] = new_individual.get_fitness_score()
         self.individuals[worst_index] = new_individual
         # print("add_individual", worst_index, self.get_individual_values_as_list(), self.fitness_scores)
