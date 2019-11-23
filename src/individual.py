@@ -79,7 +79,7 @@ class Individual:
 
     def set_nn_params(self, nn_params):
         self.__nn_params = nn_params
-        self.create_model()
+        self.__model = self.create_model()
 
     def get_nn_params(self):
         return self.__nn_params

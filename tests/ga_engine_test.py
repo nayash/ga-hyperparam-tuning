@@ -1,4 +1,16 @@
+#
+# Copyright (c) 2019. Asutosh Nayak (nayak.asutosh@ymail.com)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+
+
 import sys
+
 sys.path.append('../src')
 import unittest
 import numpy as np
@@ -53,10 +65,12 @@ class GAEngineTest(unittest.TestCase):
         # self.ga_engine.population.set_fitness_scores(self.scores)
 
     def test_selection(self):
-        self.assertEqual(self.ga_engine.selection()[0].get_fitness_score(), -0.005)
+        self.assertEqual(self.ga_engine.selection()[0].get_fitness_score(),
+                         self.ga_engine.population.get_fitness_scores()[np.argsort(self.ga_engine.population.
+                                                                                   get_fitness_scores())[-1]])
         second_parent_rank = self.ga_engine.selection()[2]
         self.assertEqual(self.ga_engine.population.individuals[second_parent_rank].get_fitness_score(),
-                         self.scores[second_parent_rank])
+                         self.ga_engine.population.get_fitness_scores()[second_parent_rank])
 
     def test_mutation(self):
         print("individual 0:", self.ga_engine.population.individuals[0].get_nn_params())
@@ -72,7 +86,7 @@ class GAEngineTest(unittest.TestCase):
         print(self.ga_engine.population.individuals[i1].get_nn_params(), "\n\n",
               self.ga_engine.population.individuals[i2].get_nn_params())
         ind1, ind2 = self.ga_engine.cross_over(self.ga_engine.population.individuals[i1],
-                                              self.ga_engine.population.individuals[i2])
+                                               self.ga_engine.population.individuals[i2])
         print("-------------------------------------------------------------------------------------------------------")
         print(ind1.get_nn_params(), "\n\n", ind2.get_nn_params())
         print("test_cross_over end")
