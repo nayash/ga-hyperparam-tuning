@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('../src')
 import unittest
 import numpy as np
@@ -49,19 +50,25 @@ class PopulationTest(unittest.TestCase):
             'output_activation': 'softmax',
             'loss': 'categorical_crossentropy'
         }
-        # self.ga_engine = GAEngine(self.search_space, func_eval=self.dummy_func_eval)
-        self.population = Population(self.search_space, self.dummy_func_eval, 'min')
+        self.mode = 'max'
+        self.ga_engine = GAEngine(self.search_space, func_eval=self.dummy_func_eval, opt_mode=self.mode)
+        self.population = self.ga_engine.population  # Population(self.search_space, self.dummy_func_eval, 'min')
         # self.scores = [-0.1, -0.01, -0.005, -0.2, -0.03]
         # self.population.set_fitness_scores(self.scores)
 
     def test_get_n_best_individual(self):
-        print("scores", self.population.get_fitness_scores())
-        temp = [score * get_mode_multiplier('min') for score in self.population.get_fitness_scores()]
-        print('temp', temp)
-        self.assertEqual(-self.population.get_n_best_individual(1).get_fitness_score(), temp[np.argmin(temp)])
-        self.assertEqual(-self.population.get_n_best_individual(3).get_fitness_score(), np.partition(temp, 2)[2])
-        self.assertEqual(-self.population.get_n_best_individual(len(temp)).get_fitness_score(),
-                         np.partition(temp, len(temp)-1)[len(temp)-1])
+        scores = self.population.get_fitness_scores()
+        print("scores", scores)
+        # temp = [score * get_mode_multiplier(self.mode) for score in self.population.get_fitness_scores()]
+        # print('temp', temp)
+        temp = sorted(scores)
+        print("best", self.population.get_n_best_individual(1).get_fitness_score(), temp[-1])
+        self.assertEqual(self.population.get_n_best_individual(1).get_fitness_score(),
+                         temp[-1])  # temp[np.argmin(temp) if self.mode == 'min' else np.argmax(temp)]
+        print("3rd best", self.population.get_n_best_individual(3).get_fitness_score(), temp[-3])
+        self.assertEqual(self.population.get_n_best_individual(3).get_fitness_score(), temp[-3])  # np.partition(temp, 2)[2]
+        print("worst", self.population.get_n_best_individual(len(temp)).get_fitness_score(), temp[-len(temp)])
+        self.assertEqual(self.population.get_n_best_individual(len(temp)).get_fitness_score(), temp[-len(temp)])  # np.partition(temp, len(temp)-1)[len(temp)-1]
         self.assertRaises(AssertionError, self.population.get_n_best_individual, -1)
         self.assertRaises(AssertionError, self.population.get_n_best_individual, 0)
 
@@ -69,10 +76,13 @@ class PopulationTest(unittest.TestCase):
         print("scores_b4_adding", self.population.get_fitness_scores())
         new_individual = Individual(choose_from_search_space(self.search_space))
         new_individual.set_fitness_score(0.01978)
-        worst_index = np.argmin(self.population.get_fitness_scores())
+        if self.mode == 'min':
+            worst_index = np.argmin(self.population.get_fitness_scores())
+        else:
+            worst_index = np.argmax(self.population.get_fitness_scores())
         self.population.add_individual(new_individual, new_individual.get_fitness_score())
-        self.assertEqual(self.population.individuals[worst_index], new_individual)
         print("scores_after_adding", self.population.get_fitness_scores())
+        self.assertEqual(self.population.individuals[worst_index], new_individual)
 
     def dummy_func_eval(self, model):
         return np.random.uniform(0, 1)
