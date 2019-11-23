@@ -1,4 +1,8 @@
+import time
 import numpy as np
+from logger import Logger
+
+_logger = Logger('.', 'ga', 10)
 
 
 def get_key_in_nested_dict(nested_dict, target_key):
@@ -39,9 +43,22 @@ def filter_list_by_prefix(_list, prefix, negation: bool = False):
 
 
 def log(*args):
-    print(" ".join(args))
+    _logger.append_log(" ".join([str(arg) for arg in args]))
 
 
 def get_mode_multiplier(mode):
     return -1 if mode == 'min' else 1
+
+
+def seconds_to_minutes(seconds):
+    return str(seconds//60) + " minutes " + str(np.round(seconds%60)) + " seconds"
+
+
+def print_time(text, stime):
+    seconds = (time.time()-stime)
+    print(text, seconds_to_minutes(seconds))
+
+
+def get_readable_ctime():
+    return time.strftime("%d-%m-%Y %H_%M_%S")
 

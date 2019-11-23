@@ -62,7 +62,7 @@ class Individual:
                 model.add(Dropout(params['do_layer_' + i]))
 
         model.add(Dense(params['output_nodes'], activation=params['output_activation']))
-        model.compile(loss=params['loss'], optimizer=params["optimizer"])  # TODO metric
+        model.compile(loss=params['loss'], optimizer=params["optimizer"], metrics=['accuracy'])  # TODO metric
         return model
 
     def set_fitness_score(self, score):

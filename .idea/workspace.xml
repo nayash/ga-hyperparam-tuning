@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ae03a1f-82e0-4c68-8673-2372e0e02732" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_suite.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/logger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ga_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ga_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/individual.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/individual.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ga_engine_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ga_engine_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/population_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/population_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/population.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/population.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/utils_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/utils_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,17 +31,18 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/tests" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="settings.editor.selected.configurable" value="copyright" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\nayak\Documents\Projects\ml_projects\GAHyperParamTuning\src" />
+      <recent name="C:\Users\nayak\Documents\Projects\ml_projects\GAHyperParamTuning\src\tests" />
+      <recent name="C:\Users\nayak\PycharmProjects\GAHyperParamTuning\src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\nayak\Documents\Projects\ml_projects\GAHyperParamTuning" />
       <recent name="C:\Users\nayak\Documents\Projects\ml_projects\GAHyperParamTuning\src" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\nayak\Documents\Projects\ml_projects\GAHyperParamTuning\src\tests" />
-      <recent name="C:\Users\nayak\PycharmProjects\GAHyperParamTuning\src" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -55,19 +57,26 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in tests">
-    <configuration name="Unittests for ga_engine_test.GAEngineTest" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="GAHyperParamTuning" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;ga_engine_test.GAEngineTest&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="Unittests for population_test.PopulationTest" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
@@ -128,11 +137,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python tests.Unittests in tests" />
         <item itemvalue="Python tests.Unittests for population_test.PopulationTest" />
         <item itemvalue="Python tests.Unittests for population_test.PopulationTest.test_add_individual" />
         <item itemvalue="Python tests.Unittests for utils_test.UtilsTest" />
-        <item itemvalue="Python tests.Unittests for ga_engine_test.GAEngineTest" />
       </list>
     </recent_temporary>
   </component>
@@ -167,7 +176,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/utils.py</url>
-          <line>4</line>
+          <line>8</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -179,6 +188,11 @@
           <url>file://$PROJECT_DIR$/src/individual.py</url>
           <line>87</line>
           <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/population.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

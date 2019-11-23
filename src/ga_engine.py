@@ -59,7 +59,7 @@ class GAEngine(GAAbstract):
 
     def selection(self):
         second_parent_rank = np.random.randint(1, min(5, self.population_size))
-        return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank),\
+        return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank), \
             second_parent_rank
 
     def on_generation_end_dummy(self, *args):
@@ -69,18 +69,18 @@ class GAEngine(GAAbstract):
         params = individual.get_nn_params()
         keys = filter_list_by_prefix(list(params.keys()), ("input", "output"), True)
         mutation_key = list(keys)[np.random.randint(0, len(keys))]
-        print("mutate_key", mutation_key)
+        log("mutate_key", mutation_key)
         # TODO if secondary mutation prob < 0.5 and mutation_key == 'layer type' completely mutate layer params
         if np.random.uniform(0, 1) < 0.5 and "layer_" in mutation_key:
             params.update(choose_from_search_space(get_key_in_nested_dict(self.search_space, "layers")))
             individual.set_nn_params(params)
-            print("complete_layer_mutate", params)
+            log("complete_layer_mutate", params)
         else:
             values = get_key_in_nested_dict(self.search_space, mutation_key)
             mutation_value_index = np.random.randint(0, len(values))
             params[mutation_key] = values[mutation_value_index]
             individual.set_nn_params(params)
-            print("plain_mutate", params)
+            log("plain_mutate", params)
         return individual
 
     def cross_over(self, individual1: Individual, individual2: Individual, individual1_part=None,
@@ -109,11 +109,12 @@ class GAEngine(GAAbstract):
         count = 0
         mul = get_mode_multiplier(self.opt_mode)
         best_score = mul * np.inf
+        start_time = time.time()
         while True:
+            log("Generation number:", count)
             # selection
             parent1, parent2, second_parent_rank = self.selection()
             mutation_prob = np.random.uniform(0, 1)
-            child = None
 
             # cross over
             if not only_mutation:
@@ -133,23 +134,21 @@ class GAEngine(GAAbstract):
             if fitness2 > best_score:
                 self.population.add_individual(child2, fitness2)
             best_score = max(fitness1, fitness2)
-            # print("new best found: {}, {}".format(child.get_value(), fitness))
+            # log("new best found: {}, {}".format(child.get_value(), fitness))
 
+            log("All scores", self.population.get_fitness_scores())
             self.on_generation_end(best_score, count)
             if self.func_should_exit(best_score):
                 break
             count = count + 1
-            if count%10 == 0:
-                print("Generation :", count)
-        print("Best individual is {} and target is {}; generations = {}".format(child.get_value(),
-                                                                                self.target.get_value(), count))
+            # if count % 10 == 0:
+            log("Generation End", count)
+        log("Best individual is {} and target is {}; generations = {}".format(child1.get_fitness_score(),
+                                                                              child2.get_fitness_score(),
+                                                                              count))
+        log("Best parameter: ", child1.get_nn_params(), "\n", child2.get_nn_params())
+        log("Total run duration:", seconds_to_minutes(time.time()-start_time))
         return count
 
     def should_exit(self, best_score):
         return np.abs(best_score) < 0.1
-
-
-
-
-
-

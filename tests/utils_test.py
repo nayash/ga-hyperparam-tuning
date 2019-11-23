@@ -86,5 +86,8 @@ class UtilsTest(unittest.TestCase):
         self.assertEqual(get_mode_multiplier('min'), -1, "min mode multiplier wrong")
         self.assertEqual(get_mode_multiplier('max'), 1, "max mode multiplier wrong")
 
+    def test_log(self):
+        log("on_generation_end: best_score=", -0.0176, "generation_count=", 10)
+
     def tearDown(self) -> None:
         pass
