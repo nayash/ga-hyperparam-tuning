@@ -71,5 +71,9 @@ class UtilsTest(unittest.TestCase):
                                                                                       'do_layer_1', 'do_layer_2']))
         self.assertTrue(len(filter_list_by_prefix(l, ('do_', 'output_'), True)) == len(l)-4)
 
+    def test_get_mode_multiplier(self):
+        self.assertEqual(get_mode_multiplier('min'), -1, "min mode multiplier wrong")
+        self.assertEqual(get_mode_multiplier('max'), 1, "max mode multiplier wrong")
+
     def tearDown(self) -> None:
         pass

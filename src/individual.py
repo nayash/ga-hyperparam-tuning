@@ -37,7 +37,7 @@ class Individual:
         """
 
         if not params:
-            params = self.nn_params
+            params = self.__nn_params
 
         num_layers = 0
         for key in params.keys():
@@ -79,6 +79,7 @@ class Individual:
 
     def set_nn_params(self, nn_params):
         self.__nn_params = nn_params
+        self.create_model()
 
     def get_nn_params(self):
         return self.__nn_params

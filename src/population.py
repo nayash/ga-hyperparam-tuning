@@ -31,14 +31,13 @@ class Population:
                 raise Exception("population size and length of individuals passed are different")
             self.individuals = individuals
         self.__fitness_scores = []
-        # self.calc_fitness_scores()
+        self.calc_fitness_scores()
 
-    def get_individual_values_as_list(self):
-        return [individual.value for individual in self.individuals]
+    def get_individual_models(self):
+        return [individual.get_model() for individual in self.individuals]
 
     def calc_fitness_score(self, individual: Individual):
-        score = 0
-        mul = -1 if self.mode == 'min' else 1
+        mul = get_mode_multiplier(self.mode)
         score = mul * self.func_eval(individual.get_model())
         return score
 
@@ -48,7 +47,8 @@ class Population:
             individual.set_fitness_score(self.calc_fitness_score(individual))
             self.__fitness_scores.append(individual.get_fitness_score())
 
-    def get_n_best_individual(self, n):
+    def get_n_best_individual(self, n) -> Individual:
+        assert n > 0, "argument to this function should be > 0. n=1 gives the best score"
         best_index = np.argsort(self.__fitness_scores)[-n]
         # print("get_n_best", best_index, self.get_individual_values_as_list(), self.fitness_scores)
         return self.individuals[best_index]
@@ -64,8 +64,8 @@ class Population:
         # print("add_individual", worst_index, self.get_individual_values_as_list(), self.fitness_scores)
 
     def set_fitness_scores(self, scores):
-        self.__fitness_scores = scores
-        for i, score in enumerate(scores):
+        self.__fitness_scores = get_mode_multiplier(self.mode)*scores
+        for i, score in enumerate(self.__fitness_scores):
             self.individuals[i].set_fitness_score(score)
 
     def get_fitness_scores(self):

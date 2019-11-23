@@ -5,9 +5,10 @@ import numpy as np
 from src.ga_engine import GAEngine
 from src.population import Population
 from src.individual import Individual
+from utils import *
 
 
-class GAEngineTest(unittest.TestCase):
+class PopulationTest(unittest.TestCase):
     def setUp(self) -> None:
         self.search_space = {
             'input_size': 784,
@@ -48,34 +49,33 @@ class GAEngineTest(unittest.TestCase):
             'output_activation': 'softmax',
             'loss': 'categorical_crossentropy'
         }
-        self.ga_engine = GAEngine(self.search_space, func_eval=self.dummy_func_eval)
+        # self.ga_engine = GAEngine(self.search_space, func_eval=self.dummy_func_eval)
+        self.population = Population(self.search_space, self.dummy_func_eval, 'min')
         # self.scores = [-0.1, -0.01, -0.005, -0.2, -0.03]
-        # self.ga_engine.population.set_fitness_scores(self.scores)
+        # self.population.set_fitness_scores(self.scores)
 
-    def test_selection(self):
-        self.assertEqual(self.ga_engine.selection()[0].get_fitness_score(), -0.005)
-        second_parent_rank = self.ga_engine.selection()[2]
-        self.assertEqual(self.ga_engine.population.individuals[second_parent_rank].get_fitness_score(),
-                         self.scores[second_parent_rank])
+    def test_get_n_best_individual(self):
+        print("scores", self.population.get_fitness_scores())
+        temp = [score * get_mode_multiplier('min') for score in self.population.get_fitness_scores()]
+        print('temp', temp)
+        self.assertEqual(-self.population.get_n_best_individual(1).get_fitness_score(), temp[np.argmin(temp)])
+        self.assertEqual(-self.population.get_n_best_individual(3).get_fitness_score(), np.partition(temp, 2)[2])
+        self.assertEqual(-self.population.get_n_best_individual(len(temp)).get_fitness_score(),
+                         np.partition(temp, len(temp)-1)[len(temp)-1])
+        self.assertRaises(AssertionError, self.population.get_n_best_individual, -1)
+        self.assertRaises(AssertionError, self.population.get_n_best_individual, 0)
 
-    def test_mutation(self):
-        print("individual 0:", self.ga_engine.population.individuals[0].get_nn_params())
-        print(self.ga_engine.mutation(self.ga_engine.population.individuals[0]).get_nn_params())
-
-        print("individual 2:", self.ga_engine.population.individuals[2].get_nn_params())
-        print(self.ga_engine.mutation(self.ga_engine.population.individuals[2]).get_nn_params())
-
-    def test_cross_over(self):
-        i1 = 0
-        i2 = 3
-        print("test_cross_over")
-        print(self.ga_engine.population.individuals[i1].get_nn_params(), "\n\n",
-              self.ga_engine.population.individuals[i2].get_nn_params())
-        ind1, ind2 = self.ga_engine.cross_over(self.ga_engine.population.individuals[i1],
-                                              self.ga_engine.population.individuals[i2])
-        print("-------------------------------------------------------------------------------------------------------")
-        print(ind1.get_nn_params(), "\n\n", ind2.get_nn_params())
-        print("test_cross_over end")
+    def test_add_individual(self):
+        print("scores_b4_adding", self.population.get_fitness_scores())
+        new_individual = Individual(choose_from_search_space(self.search_space))
+        new_individual.set_fitness_score(0.01978)
+        worst_index = np.argmin(self.population.get_fitness_scores())
+        self.population.add_individual(new_individual, new_individual.get_fitness_score())
+        self.assertEqual(self.population.individuals[worst_index], new_individual)
+        print("scores_after_adding", self.population.get_fitness_scores())
 
     def dummy_func_eval(self, model):
         return np.random.uniform(0, 1)
+
+    def tearDown(self) -> None:
+        pass

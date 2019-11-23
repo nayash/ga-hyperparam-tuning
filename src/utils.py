@@ -40,3 +40,8 @@ def filter_list_by_prefix(_list, prefix, negation: bool = False):
 
 def log(*args):
     print(" ".join(args))
+
+
+def get_mode_multiplier(mode):
+    return -1 if mode == 'min' else 1
+

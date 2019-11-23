@@ -36,10 +36,10 @@ class GAEngine(GAAbstract):
         self.search_space = search_space
         if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
-        self._population = Population(self.search_space, kwargs['func_eval'], self.population_size)
+        self.opt_mode = kwargs['opt_mode'] if 'opt_mode' in kwargs else 'min'
+        self._population = Population(self.search_space, kwargs['func_eval'], self.opt_mode, self.population_size)
         self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else \
             self.on_generation_end_dummy()
-        self.opt_mode = kwargs['opt_mode'] if 'opt_mode' in kwargs else 'min'
 
     @property
     def target(self):
@@ -107,7 +107,7 @@ class GAEngine(GAAbstract):
 
     def run(self, only_mutation=False):
         count = 0
-        mul = -1 if self.mode == 'min' else 1
+        mul = get_mode_multiplier(self.opt_mode)
         best_score = mul * np.inf
         while True:
             # selection
