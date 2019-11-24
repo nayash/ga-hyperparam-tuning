@@ -1,6 +1,7 @@
 import time
 import numpy as np
 from logger import Logger
+from matplotlib import pyplot as plt
 
 _logger = Logger('.', 'ga', 10)
 
@@ -51,12 +52,13 @@ def get_mode_multiplier(mode):
 
 
 def seconds_to_minutes(seconds):
-    return str(seconds//60) + " minutes " + str(np.round(seconds%60)) + " seconds"
+    return str(seconds // 60) + " minutes " + str(np.round(seconds % 60)) + " seconds"
 
 
 def print_time(text, stime):
-    seconds = (time.time()-stime)
+    seconds = (time.time() - stime)
     print(text, seconds_to_minutes(seconds))
+
 
 def log_flush():
     _logger.flush()
@@ -65,3 +67,47 @@ def log_flush():
 def get_readable_ctime():
     return time.strftime("%d-%m-%Y %H_%M_%S")
 
+
+def plot_iterable(iterable):
+    plt.plot(iterable)
+    plt.show()
+
+
+def smooth_coordinates(x, y):
+    poly = np.polyfit(x, y, 5)
+    y_ = np.poly1d(poly)(x)
+    return x, y_
+
+
+def plot_history(history):
+    c1 = []
+    c2 = []
+    for key in list(history.keys())[1:]:
+        gen_list = history[key]
+        c1.append(gen_list[0]['accuracy'])
+        c2.append(gen_list[1]['accuracy'])
+    x = np.arange(0, len(c1))
+    _, y1 = smooth_coordinates(x, c1)
+    _, y2 = smooth_coordinates(x, c2)
+    plt.plot(x, y1)
+    plt.plot(x, y2)
+    plt.legend(['child1', 'child2'], loc=1)
+    plt.show()
+
+
+def smooth(x, window_len=11, window='hanning'):
+    if x.ndim != 1:
+        raise ValueError("smooth only accepts 1 dimension arrays.")
+    if x.size < window_len:
+        raise ValueError("Input vector needs to be bigger than window size.")
+    if window_len < 3:
+        return x
+    if not (window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']):
+        raise ValueError("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
+    s = np.r_[2 * x[0] - x[window_len - 1::-1], x, 2 * x[-1] - x[-1:-window_len:-1]]
+    if window == 'flat':  # moving average
+        w = np.ones(window_len, 'd')
+    else:
+        w = eval('numpy.' + window + '(window_len)')
+    y = np.convolve(w / w.sum(), s, mode='same')
+    return y[window_len:-window_len + 1]

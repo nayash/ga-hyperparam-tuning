@@ -7,6 +7,7 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
+
 import os
 
 from ga_engine import GAEngine
@@ -23,46 +24,46 @@ from utils import *
 from logger import Logger
 
 search_space_mlp = {
-            'input_size': 784,
-            'batch_size': [80, 100, 120],
-            'layers': [
-                {
-                    'nodes_layer_1': [200, 300, 500, 700, 900],
-                    'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-                    'activation_layer_1': ['relu', 'sigmoid']
-                },
-                {
-                    'nodes_layer_1': [200, 300, 500, 700, 900],
-                    'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-                    'activation_layer_1': ['relu', 'sigmoid'],
+    'input_size': 784,
+    'batch_size': [80, 100, 120],
+    'layers': [
+        {
+            'nodes_layer_1': [200, 300, 500, 700, 900],
+            'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+            'activation_layer_1': ['relu', 'sigmoid']
+        },
+        {
+            'nodes_layer_1': [200, 300, 500, 700, 900],
+            'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+            'activation_layer_1': ['relu', 'sigmoid'],
 
-                    'nodes_layer_2': [100, 300, 500, 700, 900],
-                    'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-                    'activation_layer_2': ['relu', 'sigmoid']
-                },
-                {
-                    'nodes_layer_1': [300, 500, 700, 900],
-                    'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-                    'activation_layer_1': ['relu', 'sigmoid'],
+            'nodes_layer_2': [100, 300, 500, 700, 900],
+            'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
+            'activation_layer_2': ['relu', 'sigmoid']
+        },
+        {
+            'nodes_layer_1': [300, 500, 700, 900],
+            'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+            'activation_layer_1': ['relu', 'sigmoid'],
 
-                    'nodes_layer_2': [100, 300, 500, 700, 900],
-                    'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-                    'activation_layer_2': ['relu', 'sigmoid'],
+            'nodes_layer_2': [100, 300, 500, 700, 900],
+            'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
+            'activation_layer_2': ['relu', 'sigmoid'],
 
-                    'nodes_layer_3': [100, 300, 500, 700, 900],
-                    'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
-                    'activation_layer_3': ['relu', 'sigmoid']
-                }
-            ],
-            'lr': [1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            'epochs': [3000],
-            'optimizer': ['rmsprop', 'sgd', 'adam'],
-            'output_nodes': 10,
-            'output_activation': 'softmax',
-            'loss': 'categorical_crossentropy'
+            'nodes_layer_3': [100, 300, 500, 700, 900],
+            'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
+            'activation_layer_3': ['relu', 'sigmoid']
         }
-val_loss = 0.08
-val_acc = 0.97
+    ],
+    'lr': [1e-2, 1e-3, 1e-4, 1e-5],
+    'epochs': [3000],
+    'optimizer': ['rmsprop', 'sgd', 'adam'],
+    'output_nodes': 10,
+    'output_activation': 'softmax',
+    'loss': 'categorical_crossentropy'
+}
+test_loss = 0.07
+test_acc = 0.99
 ga_history_list = []
 ga_history_dict = {}
 best_scores = []
@@ -101,12 +102,12 @@ def func_eval(model, **kwargs):
     for i, key in enumerate(model.metrics_names):
         res_dict[key] = score[i]
     ga_history_list.append(res_dict)
-    return score[0], score[1]
+    return score[1]
 
 
 def exit_check(best_score):
-    return False
-    # return np.abs(best_score) <= val_loss
+    # return False
+    return np.abs(best_score) >= test_acc
 
 
 def on_generation_end(best_score, generation_count):
@@ -115,7 +116,7 @@ def on_generation_end(best_score, generation_count):
     ga_history_dict[generation_count] = ga_history_list.copy()
     ga_history_list.clear()
     best_scores.append(best_score)
-    pickle.dump(ga_history_dict, open(os.path.join('history_'+start_time), 'wb'))
+    pickle.dump(ga_history_dict, open(os.path.join('history_' + start_time), 'wb'))
     pickle.dump(best_scores, open(os.path.join('best_scores_' + start_time), 'wb'))
     log('history dumped...')
 
@@ -125,5 +126,6 @@ def func_eval_dummy(model, **kwargs):
     return np.random.uniform(0, 1, 2)
 
 
-ga_engine_ = GAEngine(search_space_mlp, exit_check=exit_check, on_generation_end=on_generation_end,
-                      func_eval=func_eval, population_size=3).run()
+ga_engine_ = GAEngine(search_space_mlp, exit_check=exit_check, on_generation_end=on_generation_end, func_eval=func_eval,
+                      population_size=5, opt_mode='max').run()
+plot_iterable(best_scores)

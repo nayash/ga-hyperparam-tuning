@@ -66,6 +66,7 @@ class GAEngine(GAAbstract):
         pass
 
     def mutation(self, individual):
+        # TODO change random number of genes instead of single gene
         params = individual.get_nn_params()
         keys = filter_list_by_prefix(list(params.keys()), ("input", "output"), True)
         mutation_key = list(keys)[np.random.randint(0, len(keys))]
@@ -88,6 +89,7 @@ class GAEngine(GAAbstract):
 
     def cross_over(self, individual1: Individual, individual2: Individual, individual1_part=None,
                    individual2_part=None):
+        # TODO choose important genes for cross overs
         ind1_params = individual1.get_nn_params()
         ind2_params = individual2.get_nn_params()
         l1 = filter_list_by_prefix(list(ind1_params.keys()), ("input", "output"), True)
@@ -114,7 +116,7 @@ class GAEngine(GAAbstract):
         best_score = mul * np.inf
         start_time = time.time()
         while True:
-            log("Generation number:", count)
+            log("Generation Start:", count)
             # selection
             parent1, parent2, second_parent_rank = self.selection()
             mutation_prob = np.random.uniform(0, 1)
@@ -130,21 +132,20 @@ class GAEngine(GAAbstract):
 
             fitness1 = self.population.calc_fitness_score(child1)
             fitness2 = self.population.calc_fitness_score(child2)
-
+            log("fitness1 = {} and fitness2 = {}".format(fitness1, fitness2))
             if fitness1 > best_score:
-                self.population.add_individual(child1, fitness1)
+                log("added child1 to {} index".format(self.population.add_individual(child1, fitness1)))
             if fitness2 > best_score:
-                self.population.add_individual(child2, fitness2)
+                log("added child2 to {} index".format(self.population.add_individual(child2, fitness2)))
             best_score = max(fitness1, fitness2)
-            # log("new best found: {}, {}".format(child.get_value(), fitness))
-
+            log("new best_score found: {}".format(best_score))
             log("All scores", self.population.get_fitness_scores())
             self.on_generation_end(best_score, count)
             if self.func_should_exit(best_score):
                 break
-            count = count + 1
             # if count % 10 == 0:
-            log("Generation End", count)
+            log("Generation End:", count)
+            count = count + 1
         log("Best individual is {} and target is {}; generations = {}".format(child1.get_fitness_score(),
                                                                               child2.get_fitness_score(),
                                                                               count))

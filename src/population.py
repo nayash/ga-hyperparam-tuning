@@ -39,7 +39,7 @@ class Population:
 
     def calc_fitness_score(self, individual: Individual):
         mul = get_mode_multiplier(self.mode)
-        score = mul * self.func_eval(individual.get_model(), batch_size=individual.get_nn_params()['batch_size'])[0]
+        score = mul * self.func_eval(individual.get_model(), batch_size=individual.get_nn_params()['batch_size'])
         return score
 
     def calc_fitness_scores(self):
@@ -63,6 +63,7 @@ class Population:
         # print("add_ind", self.individuals[worst_index].get_nn_params())
         self.__fitness_scores[worst_index] = new_individual.get_fitness_score()
         self.individuals[worst_index] = new_individual
+        return worst_index
         # print("add_individual", worst_index, self.get_individual_values_as_list(), self.fitness_scores)
 
     def set_fitness_scores(self, scores):
