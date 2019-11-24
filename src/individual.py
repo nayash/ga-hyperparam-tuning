@@ -13,10 +13,12 @@
 Individual class represents each individual in a population that participate in reproduction.
 In this project each Neural Network model is represented as Individual.
 """
+import sys
 
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
+from utils import *
 
 
 class Individual:
@@ -47,22 +49,28 @@ class Individual:
         if num_layers == 0:
             raise Exception("Please specify number of nodes for each layer using format nodes_{layer_number}")
 
-        model = Sequential()
-        for i in range(num_layers):
-            i = str(i + 1)
-            if i == '1':
-                model.add(
-                    Dense(params["nodes_layer_" + i], input_shape=(params['input_size'], ), activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
-                          else None))
-            else:
-                model.add(
-                    Dense(params["nodes_layer_" + i], activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
-                          else None))
-            if 'do_layer_' + i in params:
-                model.add(Dropout(params['do_layer_' + i]))
+        try:
+            model = Sequential()
+            for i in range(num_layers):
+                i = str(i + 1)
+                if i == '1':
+                    model.add(
+                        Dense(params["nodes_layer_" + i], input_shape=(params['input_size'], ), activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                              else None))
+                else:
+                    model.add(
+                        Dense(params["nodes_layer_" + i], activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                              else None))
+                if 'do_layer_' + i in params:
+                    model.add(Dropout(params['do_layer_' + i]))
 
-        model.add(Dense(params['output_nodes'], activation=params['output_activation']))
-        model.compile(loss=params['loss'], optimizer=params["optimizer"], metrics=['accuracy'])  # TODO metric
+            model.add(Dense(params['output_nodes'], activation=params['output_activation']))
+            model.compile(loss=params['loss'], optimizer=params["optimizer"], metrics=['accuracy'])  # TODO metric
+        except Exception as ex:
+            log("problem params", params)
+            log("exception:", str(ex))
+            log_flush()
+            sys.exit()
         return model
 
     def set_fitness_score(self, score):

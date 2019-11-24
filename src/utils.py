@@ -58,6 +58,9 @@ def print_time(text, stime):
     seconds = (time.time()-stime)
     print(text, seconds_to_minutes(seconds))
 
+def log_flush():
+    _logger.flush()
+
 
 def get_readable_ctime():
     return time.strftime("%d-%m-%Y %H_%M_%S")

@@ -77,8 +77,11 @@ class GAEngine(GAAbstract):
             log("complete_layer_mutate", params)
         else:
             values = get_key_in_nested_dict(self.search_space, mutation_key)
-            mutation_value_index = np.random.randint(0, len(values))
-            params[mutation_key] = values[mutation_value_index]
+            if not isinstance(values, str):
+                mutation_value_index = np.random.randint(0, len(values))
+                params[mutation_key] = values[mutation_value_index]
+            else:
+                params[mutation_key] = values
             individual.set_nn_params(params)
             log("plain_mutate", params)
         return individual
@@ -119,15 +122,14 @@ class GAEngine(GAAbstract):
             # cross over
             if not only_mutation:
                 child1, child2 = self.cross_over(parent1, parent2)
-                fitness1 = self.population.calc_fitness_score(child1)
-                fitness2 = self.population.calc_fitness_score(child2)
 
             # mutate
             if mutation_prob < self.mutation_probability or only_mutation:
                 child1 = self.mutation(parent1 if not child1 else child1)
                 child2 = self.mutation(parent2 if not child2 else child2)
-                fitness1 = self.population.calc_fitness_score(child1)
-                fitness2 = self.population.calc_fitness_score(child2)
+
+            fitness1 = self.population.calc_fitness_score(child1)
+            fitness2 = self.population.calc_fitness_score(child2)
 
             if fitness1 > best_score:
                 self.population.add_individual(child1, fitness1)
@@ -148,6 +150,7 @@ class GAEngine(GAAbstract):
                                                                               count))
         log("Best parameter: ", child1.get_nn_params(), "\n", child2.get_nn_params())
         log("Total run duration:", seconds_to_minutes(time.time()-start_time))
+        log_flush()
         return count
 
     def should_exit(self, best_score):
