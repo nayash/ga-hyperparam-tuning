@@ -14,6 +14,7 @@ from individual import Individual
 from utils import *
 import numpy as np
 from operator import itemgetter
+from copy import deepcopy
 
 
 class GAEngine(GAAbstract):
@@ -40,6 +41,8 @@ class GAEngine(GAAbstract):
         self._population = Population(self.search_space, kwargs['func_eval'], self.opt_mode, self.population_size)
         self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else \
             self.on_generation_end_dummy()
+        self.param_importance = {}
+        self.current_generation_updated_params = set()
 
     @property
     def target(self):
@@ -59,8 +62,10 @@ class GAEngine(GAAbstract):
 
     def selection(self):
         second_parent_rank = np.random.randint(1, min(5, self.population_size))
-        return self.population.get_n_best_individual(1), self.population.get_n_best_individual(second_parent_rank), \
-            second_parent_rank
+        while second_parent_rank == 1:  # if rank of both parents same, choose another parent
+            self.selection()
+        return deepcopy(self.population.get_n_best_individual(1)), deepcopy(self.population.get_n_best_individual(
+            second_parent_rank)), second_parent_rank
 
     def on_generation_end_dummy(self, *args):
         pass
@@ -73,8 +78,10 @@ class GAEngine(GAAbstract):
         log("mutate_key", mutation_key)
         # TODO if secondary mutation prob < 0.5 and mutation_key == 'layer type' completely mutate layer params
         if np.random.uniform(0, 1) < 0.5 and "layer_" in mutation_key:
-            params.update(choose_from_search_space(get_key_in_nested_dict(self.search_space, "layers")))
+            layer_params = choose_from_search_space(get_key_in_nested_dict(self.search_space, "layers"))
+            params.update(layer_params)
             individual.set_nn_params(params)
+            self.current_generation_updated_params.update(layer_params.keys())
             log("complete_layer_mutate", params)
         else:
             values = get_key_in_nested_dict(self.search_space, mutation_key)
@@ -83,8 +90,9 @@ class GAEngine(GAAbstract):
                 params[mutation_key] = values[mutation_value_index]
             else:
                 params[mutation_key] = values
+            log("post mutation params", params)
             individual.set_nn_params(params)
-            log("plain_mutate", params)
+            self.current_generation_updated_params.add(mutation_key)
         return individual
 
     def cross_over(self, individual1: Individual, individual2: Individual, individual1_part=None,
@@ -96,7 +104,9 @@ class GAEngine(GAAbstract):
         l2 = filter_list_by_prefix(list(ind2_params.keys()), ("input", "output"), True)
         portion1 = itemgetter(*np.random.randint(0, len(l1), 5))(l1)
         portion2 = itemgetter(*np.random.randint(0, len(l2), 5))(l2)
-        common_portion = list(set(portion1).intersection(l2))
+        common_portion = list(set(l1).intersection(l2))
+        sorted_param_imp = self.get_sorted_param_importance()
+
         if len(common_portion) == 0:
             self.cross_over(individual1, individual2)
         # swap parent attributes
@@ -105,18 +115,22 @@ class GAEngine(GAAbstract):
             temp = ind1_params[key]
             ind1_params[key] = ind2_params[key]
             ind2_params[key] = temp
+            self.current_generation_updated_params.add(key)
 
+        log("post cross-over individual1 params", ind1_params)
+        log("post cross-over individual2 params", ind2_params)
         individual1.set_nn_params(ind1_params)
         individual2.set_nn_params(ind2_params)
         return individual1, individual2
 
     def run(self, only_mutation=False):
         count = 0
-        mul = get_mode_multiplier(self.opt_mode)
-        best_score = mul * np.inf
+        # mul = get_mode_multiplier(self.opt_mode)
+        best_score = -np.inf
         start_time = time.time()
         while True:
             log("Generation Start:", count)
+            prev_best_score = self.population.get_n_best_individual(1).get_fitness_score()
             # selection
             parent1, parent2, second_parent_rank = self.selection()
             mutation_prob = np.random.uniform(0, 1)
@@ -130,6 +144,7 @@ class GAEngine(GAAbstract):
                 child1 = self.mutation(parent1 if not child1 else child1)
                 child2 = self.mutation(parent2 if not child2 else child2)
 
+            log("Evaluating params:\n{}\nand\n{}".format(child1.get_nn_params(), child2.get_nn_params()))
             fitness1 = self.population.calc_fitness_score(child1)
             fitness2 = self.population.calc_fitness_score(child2)
             log("fitness1 = {} and fitness2 = {}".format(fitness1, fitness2))
@@ -137,13 +152,16 @@ class GAEngine(GAAbstract):
                 log("added child1 to {} index".format(self.population.add_individual(child1, fitness1)))
             if fitness2 > best_score:
                 log("added child2 to {} index".format(self.population.add_individual(child2, fitness2)))
+
             best_score = max(fitness1, fitness2)
             log("new best_score found: {}".format(best_score))
             log("All scores", self.population.get_fitness_scores())
             self.on_generation_end(best_score, count)
             if self.func_should_exit(best_score):
                 break
-            # if count % 10 == 0:
+            self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
+            self.current_generation_updated_params.clear()
+
             log("Generation End:", count)
             count = count + 1
         log("Best individual is {} and target is {}; generations = {}".format(child1.get_fitness_score(),
@@ -156,3 +174,18 @@ class GAEngine(GAAbstract):
 
     def should_exit(self, best_score):
         return np.abs(best_score) < 0.1
+
+    def update_param_importance(self, params, best_score, prev_best_score):
+        delta = best_score - prev_best_score
+        for param in params:
+            if param in self.param_importance:
+                self.param_importance[param] = self.param_importance[param] + delta
+            else:
+                self.param_importance[param] = best_score
+
+    def get_sorted_param_importance(self):
+        """
+        :return: list of tuples [(key, value)]
+        """
+        return sorted(self.param_importance.items(), key=lambda kv: kv[1])
+

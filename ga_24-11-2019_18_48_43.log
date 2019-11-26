@@ -1098,3 +1098,143 @@
 25-11-2019 00_43_45 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9836000204086304, 0.9843000173568726, 0.984499990940094]
 25-11-2019 00_43_45 MainThread DEBUG\ on_generation_end: best_score= 0.9836000204086304 generation_count= 85
 25-11-2019 00_43_45 MainThread DEBUG\ history dumped...
+25-11-2019 00_43_45 MainThread DEBUG\ Generation End 86
+25-11-2019 00_43_45 MainThread DEBUG\ Generation number: 86
+25-11-2019 00_43_45 MainThread DEBUG\ properties being crossed over: ['batch_size', 'lr', 'optimizer', 'nodes_layer_2', 'activation_layer_1']
+25-11-2019 00_46_50 MainThread DEBUG\ train/val errors: 0.01860059457641217 0.0850953508913517
+25-11-2019 00_46_52 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 00_46_52 MainThread DEBUG\ eval test res: [0.09049864932180834, 0.9803000092506409]
+25-11-2019 00_48_55 MainThread DEBUG\ train/val errors: 0.010348256022554693 0.10347488842590287
+25-11-2019 00_48_57 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 00_48_57 MainThread DEBUG\ eval test res: [0.09257657229041591, 0.9829999804496765]
+25-11-2019 00_48_57 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9836000204086304, 0.9843000173568726, 0.984499990940094]
+25-11-2019 00_48_57 MainThread DEBUG\ on_generation_end: best_score= 0.9829999804496765 generation_count= 86
+25-11-2019 00_48_57 MainThread DEBUG\ history dumped...
+25-11-2019 00_48_57 MainThread DEBUG\ Generation End 87
+25-11-2019 00_48_57 MainThread DEBUG\ Generation number: 87
+25-11-2019 00_48_57 MainThread DEBUG\ properties being crossed over: ['do_layer_3', 'do_layer_1', 'loss', 'activation_layer_1']
+25-11-2019 00_52_27 MainThread DEBUG\ train/val errors: 0.017138422220464453 0.08295091300083894
+25-11-2019 00_52_28 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 00_52_28 MainThread DEBUG\ eval test res: [0.0937471014084053, 0.98089998960495]
+25-11-2019 00_55_02 MainThread DEBUG\ train/val errors: 0.009763241706284696 0.10385634035835614
+25-11-2019 00_55_04 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 00_55_04 MainThread DEBUG\ eval test res: [0.10739894604097056, 0.9811999797821045]
+25-11-2019 00_55_04 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9836000204086304, 0.9843000173568726, 0.984499990940094]
+25-11-2019 00_55_04 MainThread DEBUG\ on_generation_end: best_score= 0.9811999797821045 generation_count= 87
+25-11-2019 00_55_04 MainThread DEBUG\ history dumped...
+25-11-2019 00_55_04 MainThread DEBUG\ Generation End 88
+25-11-2019 00_55_04 MainThread DEBUG\ Generation number: 88
+25-11-2019 00_55_04 MainThread DEBUG\ properties being crossed over: ['do_layer_2', 'optimizer', 'activation_layer_1']
+25-11-2019 00_55_04 MainThread DEBUG\ mutate_key activation_layer_1
+25-11-2019 00_55_04 MainThread DEBUG\ plain_mutate {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 900, 'do_layer_1': 0.4, 'activation_layer_1': 'sigmoid', 'lr': 0.01, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy', 'nodes_layer_2': 300, 'do_layer_2': 0.2, 'activation_layer_2': 'relu', 'nodes_layer_3': 500, 'do_layer_3': 0.0, 'activation_layer_3': 'relu'}
+25-11-2019 00_55_04 MainThread DEBUG\ mutate_key optimizer
+25-11-2019 00_55_04 MainThread DEBUG\ plain_mutate {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 900, 'do_layer_1': 0.4, 'activation_layer_1': 'sigmoid', 'lr': 0.01, 'epochs': 3000, 'optimizer': 'rmsprop', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy', 'nodes_layer_2': 300, 'do_layer_2': 0.2, 'activation_layer_2': 'relu', 'nodes_layer_3': 500, 'do_layer_3': 0.0, 'activation_layer_3': 'relu'}
+25-11-2019 00_58_04 MainThread DEBUG\ train/val errors: 0.06475830484779657 0.10535277657288437
+25-11-2019 00_58_06 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 00_58_06 MainThread DEBUG\ eval test res: [0.1436181081609491, 0.9785000085830688]
+25-11-2019 01_00_22 MainThread DEBUG\ train/val errors: 0.04772040321469744 0.1401736396096951
+25-11-2019 01_00_24 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_00_24 MainThread DEBUG\ eval test res: [0.1515032647336382, 0.9824000000953674]
+25-11-2019 01_00_24 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9824000000953674, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_00_24 MainThread DEBUG\ on_generation_end: best_score= 0.9824000000953674 generation_count= 88
+25-11-2019 01_00_24 MainThread DEBUG\ history dumped...
+25-11-2019 01_00_24 MainThread DEBUG\ Generation End 89
+25-11-2019 01_00_24 MainThread DEBUG\ Generation number: 89
+25-11-2019 01_00_24 MainThread DEBUG\ properties being crossed over: ['nodes_layer_3', 'batch_size', 'nodes_layer_1', 'nodes_layer_2', 'do_layer_3']
+25-11-2019 01_03_21 MainThread DEBUG\ train/val errors: 0.0639040970989126 0.10253891633383723
+25-11-2019 01_03_22 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_03_22 MainThread DEBUG\ eval test res: [0.14165653484191956, 0.9829999804496765]
+25-11-2019 01_05_28 MainThread DEBUG\ train/val errors: 0.04477304387508498 0.15284868737482613
+25-11-2019 01_05_29 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_05_29 MainThread DEBUG\ eval test res: [0.1765223029110133, 0.9814000129699707]
+25-11-2019 01_05_29 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9829999804496765, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_05_29 MainThread DEBUG\ on_generation_end: best_score= 0.9829999804496765 generation_count= 89
+25-11-2019 01_05_29 MainThread DEBUG\ history dumped...
+25-11-2019 01_05_29 MainThread DEBUG\ Generation End 90
+25-11-2019 01_05_29 MainThread DEBUG\ Generation number: 90
+25-11-2019 01_05_29 MainThread DEBUG\ properties being crossed over: ['batch_size', 'nodes_layer_2', 'do_layer_3', 'do_layer_2']
+25-11-2019 01_08_34 MainThread DEBUG\ train/val errors: 0.05856900105380451 0.10065419510162125
+25-11-2019 01_08_36 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_08_36 MainThread DEBUG\ eval test res: [0.14452338444107768, 0.9793000221252441]
+25-11-2019 01_11_13 MainThread DEBUG\ train/val errors: 0.044053917770170085 0.15330090694165846
+25-11-2019 01_11_15 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_11_15 MainThread DEBUG\ eval test res: [0.21724912435791188, 0.9821000099182129]
+25-11-2019 01_11_15 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9829999804496765, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_11_15 MainThread DEBUG\ on_generation_end: best_score= 0.9821000099182129 generation_count= 90
+25-11-2019 01_11_15 MainThread DEBUG\ history dumped...
+25-11-2019 01_11_15 MainThread DEBUG\ Generation End 91
+25-11-2019 01_11_15 MainThread DEBUG\ Generation number: 91
+25-11-2019 01_11_15 MainThread DEBUG\ properties being crossed over: ['nodes_layer_3', 'activation_layer_2', 'do_layer_3', 'activation_layer_1']
+25-11-2019 01_14_13 MainThread DEBUG\ train/val errors: 0.0668687223893496 0.10985484309779066
+25-11-2019 01_14_14 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_14_14 MainThread DEBUG\ eval test res: [0.12966401392928764, 0.9819999933242798]
+25-11-2019 01_16_22 MainThread DEBUG\ train/val errors: 0.04905069853354819 0.14675774814586878
+25-11-2019 01_16_23 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_16_23 MainThread DEBUG\ eval test res: [0.18360984481569903, 0.9817000031471252]
+25-11-2019 01_16_23 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9829999804496765, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_16_23 MainThread DEBUG\ on_generation_end: best_score= 0.9819999933242798 generation_count= 91
+25-11-2019 01_16_23 MainThread DEBUG\ history dumped...
+25-11-2019 01_16_23 MainThread DEBUG\ Generation End 92
+25-11-2019 01_16_23 MainThread DEBUG\ Generation number: 92
+25-11-2019 01_16_23 MainThread DEBUG\ properties being crossed over: ['batch_size', 'optimizer', 'nodes_layer_2']
+25-11-2019 01_19_21 MainThread DEBUG\ train/val errors: 0.06274840889759833 0.10387356813531369
+25-11-2019 01_19_23 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_19_23 MainThread DEBUG\ eval test res: [0.11177850495703115, 0.982200026512146]
+25-11-2019 01_21_36 MainThread DEBUG\ train/val errors: 0.044551666938271714 0.13885742373767546
+25-11-2019 01_21_37 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_21_37 MainThread DEBUG\ eval test res: [0.19815173093604957, 0.9799000024795532]
+25-11-2019 01_21_37 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.982200026512146, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_21_37 MainThread DEBUG\ on_generation_end: best_score= 0.982200026512146 generation_count= 92
+25-11-2019 01_21_37 MainThread DEBUG\ history dumped...
+25-11-2019 01_21_37 MainThread DEBUG\ Generation End 93
+25-11-2019 01_21_37 MainThread DEBUG\ Generation number: 93
+25-11-2019 01_21_37 MainThread DEBUG\ properties being crossed over: ['do_layer_1', 'batch_size', 'loss', 'activation_layer_2', 'lr']
+25-11-2019 01_24_44 MainThread DEBUG\ train/val errors: 0.06437714666921585 0.09973281756146915
+25-11-2019 01_24_45 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_24_45 MainThread DEBUG\ eval test res: [0.15158932860441945, 0.9775000214576721]
+25-11-2019 01_26_48 MainThread DEBUG\ train/val errors: 0.05119384980138767 0.15326597128791036
+25-11-2019 01_26_50 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_26_50 MainThread DEBUG\ eval test res: [0.15350893141661717, 0.9807000160217285]
+25-11-2019 01_26_50 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.982200026512146, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_26_50 MainThread DEBUG\ on_generation_end: best_score= 0.9807000160217285 generation_count= 93
+25-11-2019 01_26_50 MainThread DEBUG\ history dumped...
+25-11-2019 01_26_50 MainThread DEBUG\ Generation End 94
+25-11-2019 01_26_50 MainThread DEBUG\ Generation number: 94
+25-11-2019 01_26_50 MainThread DEBUG\ properties being crossed over: ['do_layer_1', 'nodes_layer_3', 'epochs', 'nodes_layer_2', 'do_layer_2']
+25-11-2019 01_29_49 MainThread DEBUG\ train/val errors: 0.06692033544343541 0.10742556537786085
+25-11-2019 01_29_51 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_29_51 MainThread DEBUG\ eval test res: [0.13621193872328818, 0.9790999889373779]
+25-11-2019 01_31_53 MainThread DEBUG\ train/val errors: 0.05156750649110507 0.13180924085771645
+25-11-2019 01_31_54 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_31_54 MainThread DEBUG\ eval test res: [0.16914568747339767, 0.9819999933242798]
+25-11-2019 01_31_54 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9819999933242798, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_31_54 MainThread DEBUG\ on_generation_end: best_score= 0.9819999933242798 generation_count= 94
+25-11-2019 01_31_54 MainThread DEBUG\ history dumped...
+25-11-2019 01_31_54 MainThread DEBUG\ Generation End 95
+25-11-2019 01_31_54 MainThread DEBUG\ Generation number: 95
+25-11-2019 01_31_54 MainThread DEBUG\ properties being crossed over: ['nodes_layer_3', 'activation_layer_1', 'activation_layer_3', 'epochs', 'do_layer_2']
+25-11-2019 01_34_56 MainThread DEBUG\ train/val errors: 0.06230863664468329 0.10605888567657934
+25-11-2019 01_34_58 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_34_58 MainThread DEBUG\ eval test res: [0.11801254722851295, 0.9805999994277954]
+25-11-2019 01_37_08 MainThread DEBUG\ train/val errors: 0.04809994242404303 0.13702635931958665
+25-11-2019 01_37_10 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_37_10 MainThread DEBUG\ eval test res: [0.15770670612691334, 0.9825999736785889]
+25-11-2019 01_37_10 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9825999736785889, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_37_10 MainThread DEBUG\ on_generation_end: best_score= 0.9825999736785889 generation_count= 95
+25-11-2019 01_37_10 MainThread DEBUG\ history dumped...
+25-11-2019 01_37_10 MainThread DEBUG\ Generation End 96
+25-11-2019 01_37_10 MainThread DEBUG\ Generation number: 96
+25-11-2019 01_37_10 MainThread DEBUG\ properties being crossed over: ['batch_size', 'loss', 'activation_layer_3', 'lr', 'activation_layer_1']
+25-11-2019 01_39_50 MainThread DEBUG\ train/val errors: 0.06743125863205586 0.10664298677791118
+25-11-2019 01_39_52 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_39_52 MainThread DEBUG\ eval test res: [0.11642055234613104, 0.9804999828338623]
+25-11-2019 01_41_52 MainThread DEBUG\ train/val errors: 0.051306220404091746 0.1373574668123749
+25-11-2019 01_41_54 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+25-11-2019 01_41_54 MainThread DEBUG\ eval test res: [0.14145522294846433, 0.9810000061988831]
+25-11-2019 01_41_54 MainThread DEBUG\ All scores [0.9843000173568726, 0.9847999811172485, 0.9825999736785889, 0.9843000173568726, 0.984499990940094]
+25-11-2019 01_41_54 MainThread DEBUG\ on_generation_end: best_score= 0.9810000061988831 generation_count= 96
+25-11-2019 01_41_54 MainThread DEBUG\ history dumped...
+25-11-2019 01_41_54 MainThread DEBUG\ Generation End 97
+25-11-2019 01_41_54 MainThread DEBUG\ Generation number: 97
+25-11-2019 01_41_54 MainThread DEBUG\ properties being crossed over: ['nodes_layer_3', 'batch_size', 'lr', 'loss']
+25-11-2019 01_45_32 MainThread DEBUG\ train/val errors: 0.05899349427113997 0.10597977806697599

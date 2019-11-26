@@ -9,7 +9,10 @@
 #
 
 import os
-
+import pandas as pd
+from keras.utils import np_utils
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from ga_engine import GAEngine
 import numpy as np
 import keras
@@ -22,55 +25,100 @@ from logger import Logger
 import pickle
 from utils import *
 from logger import Logger
+import datetime
+import time
 
 search_space_mlp = {
     'input_size': 784,
     'batch_size': [80, 100, 120],
     'layers': [
         {
-            'nodes_layer_1': [200, 300, 500, 700, 900],
+            'nodes_layer_1': [10, 50, 60, 80, 500],
             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_1': ['relu', 'sigmoid']
         },
         {
-            'nodes_layer_1': [200, 300, 500, 700, 900],
+            'nodes_layer_1': [10, 50, 60, 80, 500],
             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_1': ['relu', 'sigmoid'],
 
-            'nodes_layer_2': [100, 300, 500, 700, 900],
+            'nodes_layer_2': [10, 50, 60, 80, 500],
             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_2': ['relu', 'sigmoid']
         },
         {
-            'nodes_layer_1': [300, 500, 700, 900],
+            'nodes_layer_1': [10, 50, 60, 80, 500],
             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_1': ['relu', 'sigmoid'],
 
-            'nodes_layer_2': [100, 300, 500, 700, 900],
+            'nodes_layer_2': [10, 50, 60, 80, 500],
             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_2': ['relu', 'sigmoid'],
 
-            'nodes_layer_3': [100, 300, 500, 700, 900],
+            'nodes_layer_3': [10, 50, 60, 80, 500],
             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_3': ['relu', 'sigmoid']
         }
     ],
-    'lr': [1e-2, 1e-3, 1e-4, 1e-5],
+    'lr': [1e-2, 1e-3, 1e-4],
     'epochs': [3000],
     'optimizer': ['rmsprop', 'sgd', 'adam'],
     'output_nodes': 10,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
+
+# search_space_mlp = {
+#     'input_size': 4,
+#     'batch_size': [10, 50, 100],
+#     'layers': [
+#         {
+#             'nodes_layer_1': [200, 300, 500, 700, 900],
+#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_1': ['relu', 'sigmoid']
+#         },
+#         {
+#             'nodes_layer_1': [200, 300, 500, 700, 900],
+#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_1': ['relu', 'sigmoid'],
+#
+#             'nodes_layer_2': [100, 300, 500, 700, 900],
+#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_2': ['relu', 'sigmoid']
+#         },
+#         {
+#             'nodes_layer_1': [300, 500, 700, 900],
+#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_1': ['relu', 'sigmoid'],
+#
+#             'nodes_layer_2': [100, 300, 500, 700, 900],
+#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_2': ['relu', 'sigmoid'],
+#
+#             'nodes_layer_3': [100, 300, 500, 700, 900],
+#             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_3': ['relu', 'sigmoid']
+#         }
+#     ],
+#     'lr': [1e-2, 1e-3, 1e-4, 1e-5],
+#     'epochs': [3000],
+#     'optimizer': ['rmsprop', 'sgd', 'adam'],
+#     'output_nodes': 10,
+#     'output_activation': 'softmax',
+#     'loss': 'categorical_crossentropy'
+# }
 test_loss = 0.07
 test_acc = 0.99
+mode = 'max'
+time_limit = 90  # minutes
 ga_history_list = []
 ga_history_dict = {}
 best_scores = []
 start_time = get_readable_ctime()
+start_time_epoch = datetime.datetime.now()
 
 
-def get_data():
+def get_data_mnist():
     num_classes = 10
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     # print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
@@ -87,8 +135,23 @@ def get_data():
     return x_train, y_train, x_test, y_test
 
 
+def get_data_iris():
+    dataframe = pd.read_csv("./inputs/Iris.csv")
+    dataset = dataframe.values
+    X = dataset[:, 1:5].astype(float)
+    Y = dataset[:, 5]
+    # encode class values as integers
+    encoder = LabelEncoder()
+    encoder.fit(Y)
+    encoded_y = encoder.transform(Y)
+    # convert integers to dummy variables (i.e. one hot encoded)
+    dummy_y = np_utils.to_categorical(encoded_y)
+    x_train, x_test, y_train, y_test = train_test_split(X, dummy_y, test_size=0.3)
+    return x_train, y_train, x_test, y_test
+
+
 def func_eval(model, **kwargs):
-    x_train, y_train, x_test, y_test = get_data()
+    x_train, y_train, x_test, y_test = get_data_mnist()
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20, min_delta=0.0001)
     history = model.fit(x_train, y_train, batch_size=kwargs['batch_size'], epochs=500, verbose=2,
                         validation_split=0.3, callbacks=[es])
@@ -102,12 +165,12 @@ def func_eval(model, **kwargs):
     for i, key in enumerate(model.metrics_names):
         res_dict[key] = score[i]
     ga_history_list.append(res_dict)
-    return score[1]
+    return score[0] if mode == 'min' else score[1]
 
 
 def exit_check(best_score):
     # return False
-    return np.abs(best_score) >= test_acc
+    return np.abs(best_score) >= test_acc or ((datetime.datetime.now()-start_time_epoch).seconds/60) >= time_limit
 
 
 def on_generation_end(best_score, generation_count):
@@ -127,5 +190,7 @@ def func_eval_dummy(model, **kwargs):
 
 
 ga_engine_ = GAEngine(search_space_mlp, exit_check=exit_check, on_generation_end=on_generation_end, func_eval=func_eval,
-                      population_size=5, opt_mode='max').run()
+                      population_size=3, opt_mode=mode).run()
+
 plot_iterable(best_scores)
+plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))

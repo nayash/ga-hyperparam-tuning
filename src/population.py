@@ -30,6 +30,9 @@ class Population:
             if not (population_size == len(individuals)):
                 raise Exception("population size and length of individuals passed are different")
             self.individuals = individuals
+        log("Initial population :")
+        for i, individual in enumerate(self.individuals):
+            log(i, '=>', individual.get_nn_params(), '\n')
         self.__fitness_scores = []
         self.calc_fitness_scores()
         log("initial population scores", self.__fitness_scores)
