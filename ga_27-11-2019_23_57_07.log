@@ -1,0 +1,59 @@
+27-11-2019 23_57_07 MainThread INFO\ Initialized logging at path ./ga_27-11-2019_23_57_07.log
+27-11-2019 23_57_09 MainThread DEBUG\ Initial population :
+27-11-2019 23_57_09 MainThread DEBUG\ 0 => {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.1, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'} 
+
+27-11-2019 23_57_09 MainThread DEBUG\ 1 => {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 60, 'do_layer_1': 0.4, 'activation_layer_1': 'sigmoid', 'nodes_layer_2': 80, 'do_layer_2': 0.2, 'activation_layer_2': 'relu', 'lr': 0.01, 'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'} 
+
+27-11-2019 23_57_09 MainThread DEBUG\ 2 => {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 500, 'do_layer_1': 0.3, 'activation_layer_1': 'relu', 'nodes_layer_2': 80, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'} 
+
+28-11-2019 00_03_24 MainThread DEBUG\ train/val errors: 0.7890719211101532 0.40961800118287406
+28-11-2019 00_03_24 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+28-11-2019 00_03_24 MainThread DEBUG\ eval test res: [0.4130745471715927, 0.8902000188827515]
+28-11-2019 00_15_22 MainThread DEBUG\ train/val errors: 0.19148205589680445 0.1305861114503609
+28-11-2019 00_15_22 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+28-11-2019 00_15_22 MainThread DEBUG\ eval test res: [0.12174882669709623, 0.9621999859809875]
+28-11-2019 00_16_23 MainThread DEBUG\ train/val errors: 0.009229967262169035 0.07910593453536018
+28-11-2019 00_16_24 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+28-11-2019 00_16_24 MainThread DEBUG\ eval test res: [0.08077772654761939, 0.9824000000953674]
+28-11-2019 00_16_24 MainThread DEBUG\ initial population scores [0.8902000188827515, 0.9621999859809875, 0.9824000000953674]
+28-11-2019 00_16_24 MainThread DEBUG\ Generation Start: 0
+28-11-2019 00_16_26 MainThread DEBUG\ sorted params: []
+28-11-2019 00_16_26 MainThread DEBUG\ properties being crossed over: ['do_layer_2', 'epochs', 'activation_layer_2']
+28-11-2019 00_16_26 MainThread DEBUG\ post cross-over individual1 params {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 500, 'do_layer_1': 0.3, 'activation_layer_1': 'relu', 'nodes_layer_2': 80, 'do_layer_2': 0.1, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_16_26 MainThread DEBUG\ post cross-over individual2 params {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_16_26 MainThread DEBUG\ mutate_key activation_layer_1
+28-11-2019 00_16_27 MainThread DEBUG\ complete_layer_mutate {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 10, 'do_layer_1': 0.2, 'activation_layer_1': 'relu', 'nodes_layer_2': 10, 'do_layer_2': 0.0, 'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_16_27 MainThread DEBUG\ mutate_key optimizer
+28-11-2019 00_16_27 MainThread DEBUG\ post mutation params {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_16_27 MainThread DEBUG\ Evaluating params:
+{'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 10, 'do_layer_1': 0.2, 'activation_layer_1': 'relu', 'nodes_layer_2': 10, 'do_layer_2': 0.0, 'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+and
+{'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_17_57 MainThread DEBUG\ train/val errors: 0.42207856411025635 0.2809312952061494
+28-11-2019 00_17_58 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+28-11-2019 00_17_58 MainThread DEBUG\ eval test res: [0.2860212212741375, 0.9192000031471252]
+28-11-2019 00_19_31 MainThread DEBUG\ train/val errors: 0.7313056798492159 0.39153726692001023
+28-11-2019 00_19_31 MainThread DEBUG\ eval test keys: ['loss', 'accuracy']
+28-11-2019 00_19_31 MainThread DEBUG\ eval test res: [0.4113044807195663, 0.8805000185966492]
+28-11-2019 00_19_31 MainThread DEBUG\ fitness1 = 0.9192000031471252, fitness2 = 0.8805000185966492 and prev_best = 0.9824000000953674
+28-11-2019 00_19_31 MainThread DEBUG\ current generation score: 0.9192000031471252
+28-11-2019 00_19_31 MainThread DEBUG\ All scores [0.8902000188827515, 0.9621999859809875, 0.9824000000953674]
+28-11-2019 00_19_31 MainThread DEBUG\ on_generation_end: best_score= 0.9192000031471252 generation_count= 0
+28-11-2019 00_19_31 MainThread DEBUG\ history dumped...
+28-11-2019 00_19_31 MainThread DEBUG\ current gen update params: {'lr', 'loss', 'batch_size', 'do_layer_1', 'output_nodes', 'epochs', 'activation_layer_2', 'nodes_layer_1', 'optimizer', 'input_size', 'output_activation', 'nodes_layer_2', 'do_layer_2', 'activation_layer_1'}
+28-11-2019 00_19_31 MainThread DEBUG\ Generation End: 0
+28-11-2019 00_19_31 MainThread DEBUG\ Generation Start: 1
+28-11-2019 00_19_34 MainThread DEBUG\ sorted params: [('lr', 0.9192000031471252), ('loss', 0.9192000031471252), ('batch_size', 0.9192000031471252), ('do_layer_1', 0.9192000031471252), ('output_nodes', 0.9192000031471252), ('epochs', 0.9192000031471252), ('activation_layer_2', 0.9192000031471252), ('nodes_layer_1', 0.9192000031471252), ('optimizer', 0.9192000031471252), ('input_size', 0.9192000031471252), ('output_activation', 0.9192000031471252), ('nodes_layer_2', 0.9192000031471252), ('do_layer_2', 0.9192000031471252), ('activation_layer_1', 0.9192000031471252)]
+28-11-2019 00_19_34 MainThread DEBUG\ selected imp_params ['lr', 'loss']
+28-11-2019 00_19_34 MainThread DEBUG\ properties being crossed over: ['lr', 'loss']
+28-11-2019 00_19_34 MainThread DEBUG\ post cross-over individual1 params {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 500, 'do_layer_1': 0.3, 'activation_layer_1': 'relu', 'nodes_layer_2': 80, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_19_34 MainThread DEBUG\ post cross-over individual2 params {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.1, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_19_34 MainThread DEBUG\ mutate_key lr
+28-11-2019 00_19_34 MainThread DEBUG\ post mutation params {'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 500, 'do_layer_1': 0.3, 'activation_layer_1': 'relu', 'nodes_layer_2': 80, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_19_34 MainThread DEBUG\ mutate_key epochs
+28-11-2019 00_19_34 MainThread DEBUG\ post mutation params {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.1, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_19_34 MainThread DEBUG\ Evaluating params:
+{'input_size': 784, 'batch_size': 80, 'nodes_layer_1': 500, 'do_layer_1': 0.3, 'activation_layer_1': 'relu', 'nodes_layer_2': 80, 'do_layer_2': 0.2, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'adam', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+and
+{'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 10, 'do_layer_1': 0.4, 'activation_layer_1': 'relu', 'nodes_layer_2': 60, 'do_layer_2': 0.1, 'activation_layer_2': 'sigmoid', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy'}
+28-11-2019 00_20_32 MainThread DEBUG\ train/val errors: 0.010367906731747402 0.0782013321638159

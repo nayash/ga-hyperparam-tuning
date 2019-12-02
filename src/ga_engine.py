@@ -61,11 +61,15 @@ class GAEngine(GAAbstract):
         self._population = population
 
     def selection(self):
-        second_parent_rank = np.random.randint(1, min(5, self.population_size))
-        while second_parent_rank == 1:  # if rank of both parents same, choose another parent
-            self.selection()
-        return deepcopy(self.population.get_n_best_individual(1)), deepcopy(self.population.get_n_best_individual(
-            second_parent_rank)), second_parent_rank
+        second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
+        first_parent = self.population.get_n_best_individual(1)
+        print("second_rank", second_parent_rank)
+        while first_parent.get_nn_params() == self.population.get_n_best_individual(
+                second_parent_rank).get_nn_params():  # if rank of both parents same, choose another
+            log("calling selection recursive", second_parent_rank, min(5, self.population_size))
+            second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
+        return deepcopy(first_parent), deepcopy(self.population.get_n_best_individual(second_parent_rank)), \
+               second_parent_rank
 
     def on_generation_end_dummy(self, *args):
         pass
@@ -104,9 +108,19 @@ class GAEngine(GAAbstract):
         l2 = filter_list_by_prefix(list(ind2_params.keys()), ("input", "output"), True)
         portion1 = itemgetter(*np.random.randint(0, len(l1), 5))(l1)
         portion2 = itemgetter(*np.random.randint(0, len(l2), 5))(l2)
-        common_portion = list(set(l1).intersection(l2))
         sorted_param_imp = self.get_sorted_param_importance()
-
+        log("sorted params:", sorted_param_imp)
+        if len(sorted_param_imp) == 0:
+            common_portion = list(set(portion1).intersection(l2))
+        else:
+            co_size = min(np.random.randint(1, 5), len(sorted_param_imp))
+            common_portion = []
+            count = 0
+            while len(common_portion) < co_size and count < len(sorted_param_imp):
+                if sorted_param_imp[count][0] in l1 and sorted_param_imp[count][0] in l2:
+                    common_portion.append(sorted_param_imp[count][0])
+                count = count + 1
+            log("selected imp_params", common_portion)
         if len(common_portion) == 0:
             self.cross_over(individual1, individual2)
         # swap parent attributes
@@ -147,28 +161,28 @@ class GAEngine(GAAbstract):
             log("Evaluating params:\n{}\nand\n{}".format(child1.get_nn_params(), child2.get_nn_params()))
             fitness1 = self.population.calc_fitness_score(child1)
             fitness2 = self.population.calc_fitness_score(child2)
-            log("fitness1 = {} and fitness2 = {}".format(fitness1, fitness2))
-            if fitness1 > best_score:
+            log("fitness1 = {}, fitness2 = {} and prev_best = {}".format(fitness1, fitness2, prev_best_score))
+            if fitness1 > prev_best_score:
                 log("added child1 to {} index".format(self.population.add_individual(child1, fitness1)))
-            if fitness2 > best_score:
+            if fitness2 > prev_best_score:
                 log("added child2 to {} index".format(self.population.add_individual(child2, fitness2)))
 
             best_score = max(fitness1, fitness2)
-            log("new best_score found: {}".format(best_score))
+            log("current generation score: {}".format(best_score))
             log("All scores", self.population.get_fitness_scores())
             self.on_generation_end(best_score, count)
             if self.func_should_exit(best_score):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
-
+            log("curr gen updated param after clear", self.current_generation_updated_params)
             log("Generation End:", count)
             count = count + 1
         log("Best individual is {} and target is {}; generations = {}".format(child1.get_fitness_score(),
                                                                               child2.get_fitness_score(),
                                                                               count))
         log("Best parameter: ", child1.get_nn_params(), "\n", child2.get_nn_params())
-        log("Total run duration:", seconds_to_minutes(time.time()-start_time))
+        log("Total run duration:", seconds_to_minutes(time.time() - start_time))
         log_flush()
         return count
 
@@ -176,16 +190,17 @@ class GAEngine(GAAbstract):
         return np.abs(best_score) < 0.1
 
     def update_param_importance(self, params, best_score, prev_best_score):
+        log("current gen update params:", params)
         delta = best_score - prev_best_score
         for param in params:
             if param in self.param_importance:
                 self.param_importance[param] = self.param_importance[param] + delta
             else:
-                self.param_importance[param] = best_score
+                self.param_importance[param] = delta
 
     def get_sorted_param_importance(self):
         """
         :return: list of tuples [(key, value)]
         """
-        return sorted(self.param_importance.items(), key=lambda kv: kv[1])
 
+        return sorted(self.param_importance.items(), key=lambda kv: kv[1], reverse=True)
