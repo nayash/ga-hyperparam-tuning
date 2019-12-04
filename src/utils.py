@@ -3,7 +3,7 @@ import numpy as np
 from logger import Logger
 from matplotlib import pyplot as plt
 
-_logger = Logger('.', 'ga', 10)
+_logger = Logger('outputs', 'ga', 20)
 
 
 def get_key_in_nested_dict(nested_dict, target_key):
@@ -23,8 +23,8 @@ def get_key_in_nested_dict(nested_dict, target_key):
 def choose_from_search_space(search_space_mlp: dict, key=None, params={}):
     if type(search_space_mlp) is dict:
         keys = search_space_mlp.keys()
-        for key in keys:
-            params = choose_from_search_space(search_space_mlp[key], key, params)
+        for _key in keys:
+            params = choose_from_search_space(search_space_mlp[_key], _key, params)
     elif type(search_space_mlp) is list:  # or type(search_space_mlp) is tuple:
         params = choose_from_search_space(search_space_mlp[np.random.randint(0, len(search_space_mlp))], key, params)
     else:

@@ -107,10 +107,11 @@ search_space_mlp = {
 #     'output_activation': 'softmax',
 #     'loss': 'categorical_crossentropy'
 # }
+OUTPUT_PATH = 'outputs'
 test_loss = 0.07
 test_acc = 0.99
 mode = 'max'
-time_limit = 90  # minutes
+time_limit = 120  # minutes
 ga_history_list = []
 ga_history_dict = {}
 best_scores = []
@@ -179,8 +180,8 @@ def on_generation_end(best_score, generation_count):
     ga_history_dict[generation_count] = ga_history_list.copy()
     ga_history_list.clear()
     best_scores.append(best_score)
-    pickle.dump(ga_history_dict, open(os.path.join('history_' + start_time), 'wb'))
-    pickle.dump(best_scores, open(os.path.join('best_scores_' + start_time), 'wb'))
+    pickle.dump(ga_history_dict, open(os.path.join(OUTPUT_PATH, 'history_' + start_time), 'wb'))
+    pickle.dump(best_scores, open(os.path.join(OUTPUT_PATH, 'best_scores_' + start_time), 'wb'))
     log('history dumped...')
 
 
@@ -189,8 +190,8 @@ def func_eval_dummy(model, **kwargs):
     return np.random.uniform(0, 1, 2)
 
 
-ga_engine_ = GAEngine(search_space_mlp, exit_check=exit_check, on_generation_end=on_generation_end, func_eval=func_eval,
-                      population_size=3, opt_mode=mode).run()
+ga_engine_ = GAEngine(search_space_mlp, mutation_probability=0.3, exit_check=exit_check,
+                      on_generation_end=on_generation_end, func_eval=func_eval, population_size=3, opt_mode=mode).run()
 
 plot_iterable(best_scores)
 plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))

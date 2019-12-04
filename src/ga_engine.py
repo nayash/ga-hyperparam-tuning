@@ -82,9 +82,11 @@ class GAEngine(GAAbstract):
         log("mutate_key", mutation_key)
         # TODO if secondary mutation prob < 0.5 and mutation_key == 'layer type' completely mutate layer params
         if np.random.uniform(0, 1) < 0.5 and "layer_" in mutation_key:
-            layer_params = choose_from_search_space(get_key_in_nested_dict(self.search_space, "layers"))
+            layer_params = choose_from_search_space(get_key_in_nested_dict(self.search_space, 'layers'))
+            log("all_layer_params", layer_params.keys())
             params.update(layer_params)
             individual.set_nn_params(params)
+            log("adding to update params list mutate_all", layer_params.keys())
             self.current_generation_updated_params.update(layer_params.keys())
             log("complete_layer_mutate", params)
         else:
@@ -96,6 +98,7 @@ class GAEngine(GAAbstract):
                 params[mutation_key] = values
             log("post mutation params", params)
             individual.set_nn_params(params)
+            log("adding to update params list mutate_single", mutation_key)
             self.current_generation_updated_params.add(mutation_key)
         return individual
 
@@ -129,6 +132,7 @@ class GAEngine(GAAbstract):
             temp = ind1_params[key]
             ind1_params[key] = ind2_params[key]
             ind2_params[key] = temp
+            log("adding to update params list co", key)
             self.current_generation_updated_params.add(key)
 
         log("post cross-over individual1 params", ind1_params)
@@ -147,6 +151,7 @@ class GAEngine(GAAbstract):
             prev_best_score = self.population.get_n_best_individual(1).get_fitness_score()
             # selection
             parent1, parent2, second_parent_rank = self.selection()
+            log("selected parents:\n", parent1.get_nn_params(), "\n", parent2.get_nn_params())
             mutation_prob = np.random.uniform(0, 1)
 
             # cross over
@@ -178,9 +183,9 @@ class GAEngine(GAAbstract):
             log("curr gen updated param after clear", self.current_generation_updated_params)
             log("Generation End:", count)
             count = count + 1
-        log("Best individual is {} and target is {}; generations = {}".format(child1.get_fitness_score(),
-                                                                              child2.get_fitness_score(),
-                                                                              count))
+        log("Best individual is {}, {} and target is {}; generations = {}".format(child1.get_fitness_score(),
+                                                                                  child2.get_fitness_score(),
+                                                                                  self.target, count))
         log("Best parameter: ", child1.get_nn_params(), "\n", child2.get_nn_params())
         log("Total run duration:", seconds_to_minutes(time.time() - start_time))
         log_flush()
