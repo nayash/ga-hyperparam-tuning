@@ -64,10 +64,18 @@ class GAEngine(GAAbstract):
         second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
         first_parent = self.population.get_n_best_individual(1)
         print("second_rank", second_parent_rank)
+        count = 0
         while first_parent.get_nn_params() == self.population.get_n_best_individual(
-                second_parent_rank).get_nn_params():  # if rank of both parents same, choose another
+                second_parent_rank).get_nn_params() and count < 30:  # if rank of both parents same, choose another
             log("calling selection recursive", second_parent_rank, min(5, self.population_size))
             second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
+            count = count + 1
+        if count >= 30:
+            log("using same parents:", first_parent.get_nn_params(), self.population.get_n_best_individual(
+                second_parent_rank).get_nn_params())
+            log("all parents params:\n")
+            for i in self.population.individuals:
+                log(i, '-->', i.get_nn_params())
         return deepcopy(first_parent), deepcopy(self.population.get_n_best_individual(second_parent_rank)), \
                second_parent_rank
 
