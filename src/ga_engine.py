@@ -82,7 +82,7 @@ class GAEngine(GAAbstract):
         log("mutate_key", mutation_key)
         # TODO if secondary mutation prob < 0.5 and mutation_key == 'layer type' completely mutate layer params
         if np.random.uniform(0, 1) < 0.5 and "layer_" in mutation_key:
-            layer_params = choose_from_search_space(get_key_in_nested_dict(self.search_space, 'layers'))
+            layer_params = choose_from_search_space(get_key_in_nested_dict(self.search_space, 'layers'), None, {})
             log("all_layer_params", layer_params.keys())
             params.update(layer_params)
             individual.set_nn_params(params)

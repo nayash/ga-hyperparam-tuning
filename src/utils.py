@@ -20,7 +20,8 @@ def get_key_in_nested_dict(nested_dict, target_key):
                         return res
 
 
-def choose_from_search_space(search_space_mlp: dict, key=None, params={}):
+def choose_from_search_space(search_space_mlp, key=None, params={}):
+    # print("choose_from_ss", '---', search_space_mlp, '---', key, '---', params)
     if type(search_space_mlp) is dict:
         keys = search_space_mlp.keys()
         for _key in keys:
