@@ -215,5 +215,4 @@ class GAEngine(GAAbstract):
         """
         :return: list of tuples [(key, value)]
         """
-
         return sorted(self.param_importance.items(), key=lambda kv: kv[1], reverse=True)
