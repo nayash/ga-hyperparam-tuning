@@ -162,6 +162,8 @@ class GAEngine(GAAbstract):
             log("selected parents:\n", parent1.get_nn_params(), "\n", parent2.get_nn_params())
             mutation_prob = np.random.uniform(0, 1)
 
+            # TODO tryout other genetic operators listed in Wikipedia article
+
             # cross over
             if not only_mutation:
                 child1, child2 = self.cross_over(parent1, parent2)
@@ -175,10 +177,16 @@ class GAEngine(GAAbstract):
             fitness1 = self.population.calc_fitness_score(child1)
             fitness2 = self.population.calc_fitness_score(child2)
             log("fitness1 = {}, fitness2 = {} and prev_best = {}".format(fitness1, fitness2, prev_best_score))
-            if fitness1 > prev_best_score:
-                log("added child1 to {} index".format(self.population.add_individual(child1, fitness1)))
-            if fitness2 > prev_best_score:
-                log("added child2 to {} index".format(self.population.add_individual(child2, fitness2)))
+            # TODO instead of replacing only best_score, try replacing any of the less fit individual of current gen
+
+            # if fitness1 > prev_best_score:
+            add_index = self.population.add_individual(child1, fitness1)
+            if add_index > -1:
+                log("added child1 to {} index".format(add_index))
+            # if fitness2 > prev_best_score:
+            add_index = self.population.add_individual(child2, fitness2)
+            if add_index > -1:
+                log("added child2 to {} index".format(add_index))
 
             best_score = max(fitness1, fitness2)
             log("current generation score: {}".format(best_score))
@@ -191,6 +199,7 @@ class GAEngine(GAAbstract):
             log("curr gen updated param after clear", self.current_generation_updated_params)
             log("Generation End:", count)
             count = count + 1
+
         log("Best individual is {}, {} and target is {}; generations = {}".format(child1.get_fitness_score(),
                                                                                   child2.get_fitness_score(),
                                                                                   self.target, count))

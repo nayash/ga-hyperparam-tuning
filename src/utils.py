@@ -112,3 +112,10 @@ def smooth(x, window_len=11, window='hanning'):
         w = eval('numpy.' + window + '(window_len)')
     y = np.convolve(w / w.sum(), s, mode='same')
     return y[window_len:-window_len + 1]
+
+
+def find_replace_index(num, list_nums):
+    for idx, n in enumerate(list_nums):
+        if num > n:
+            return idx
+    return -1

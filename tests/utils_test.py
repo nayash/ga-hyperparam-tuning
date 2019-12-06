@@ -59,43 +59,56 @@ class UtilsTest(unittest.TestCase):
         }
 
     def test_get_key_in_nested_dict(self):
-        # self.assertEqual(get_key_in_nested_dict(self.search_space, 'batch_size'), [80, 100, 120])
-        # self.assertEqual(get_key_in_nested_dict(self.search_space, 'nodes_layer_1'), [50, 100, 200, 300, 500, 700, 900])
-        # self.assertEqual(get_key_in_nested_dict(self.search_space, 'activation_layer_3'), ['relu', 'sigmoid'])
-        # self.assertEqual(choose_from_search_space(get_key_in_nested_dict(self.search_space, 'loss')),
-        #                  'categorical_crossentropy')
-        # print("layers_original", self.search_space['layers'])
-        print("calling with full space------------------------")
-        print("get_key_in_nested", choose_from_search_space(self.search_space))
-        # print("space", self.search_space)
+        self.assertEqual(get_key_in_nested_dict(self.search_space, 'batch_size'), [80, 100, 120])
+        self.assertEqual(get_key_in_nested_dict(self.search_space, 'nodes_layer_1'), [50, 100, 200, 300, 500, 700, 900])
+        self.assertEqual(get_key_in_nested_dict(self.search_space, 'activation_layer_3'), ['relu', 'sigmoid'])
+        self.assertEqual(choose_from_search_space(get_key_in_nested_dict(self.search_space, 'loss')),
+                         'categorical_crossentropy')
         for i in range(10000):
-            print("calling with layers------------------------")
+            # print("calling with layers------------------------")
             d = choose_from_search_space(self.search_space['layers'], None, {})
             # print(i)
             self.assertTrue('output_nodes' not in d.keys())
 
-    # def test_choose_from_search_space(self):
-    #     print(choose_from_search_space(self.search_space))
-    #     print("layers choose", choose_from_search_space(self.search_space['layers'], 'layers'))
-    #     self.assertTrue(type(choose_from_search_space(self.search_space['lr'])) is float)
-    #     self.assertTrue(type(choose_from_search_space(self.search_space['loss'])) is str)
+    def test_choose_from_search_space(self):
+        print(choose_from_search_space(self.search_space))
+        print("layers choose", choose_from_search_space(self.search_space['layers'], 'layers'))
+        self.assertTrue(type(choose_from_search_space(self.search_space['lr'])) is float)
+        self.assertTrue(type(choose_from_search_space(self.search_space['loss'])) is str)
 
-    # def test_filter_list_by_prefix(self):
-    #     d = {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 300, 'do_layer_1': 0.0, 'activation_layer_1':
-    #          'sigmoid', 'nodes_layer_2': 500, 'do_layer_2': 0.3, 'activation_layer_2': 'sigmoid', 'lr': 1e-07, 'epochs':
-    #          3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss':
-    #          'categorical_crossentropy'}
-    #     l = list(d.keys())
-    #     self.assertEqual(sorted(filter_list_by_prefix(l, ('nodes_', 'do_'))), sorted(['nodes_layer_1', 'nodes_layer_2',
-    #                                                                                   'do_layer_1', 'do_layer_2']))
-    #     self.assertTrue(len(filter_list_by_prefix(l, ('do_', 'output_'), True)) == len(l)-4)
-    #
-    # def test_get_mode_multiplier(self):
-    #     self.assertEqual(get_mode_multiplier('min'), -1, "min mode multiplier wrong")
-    #     self.assertEqual(get_mode_multiplier('max'), 1, "max mode multiplier wrong")
-    #
-    # def test_log(self):
-    #     log("on_generation_end: best_score=", -0.0176, "generation_count=", 10)
+    def test_filter_list_by_prefix(self):
+        d = {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 300, 'do_layer_1': 0.0, 'activation_layer_1':
+             'sigmoid', 'nodes_layer_2': 500, 'do_layer_2': 0.3, 'activation_layer_2': 'sigmoid', 'lr': 1e-07, 'epochs':
+             3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss':
+             'categorical_crossentropy'}
+        l = list(d.keys())
+        self.assertEqual(sorted(filter_list_by_prefix(l, ('nodes_', 'do_'))), sorted(['nodes_layer_1', 'nodes_layer_2',
+                                                                                      'do_layer_1', 'do_layer_2']))
+        self.assertTrue(len(filter_list_by_prefix(l, ('do_', 'output_'), True)) == len(l)-4)
+
+    def test_get_mode_multiplier(self):
+        self.assertEqual(get_mode_multiplier('min'), -1, "min mode multiplier wrong")
+        self.assertEqual(get_mode_multiplier('max'), 1, "max mode multiplier wrong")
+
+    def test_log(self):
+        log("on_generation_end: best_score=", -0.0176, "generation_count=", 10)
+
+    def test_find_replace_index(self):
+        num = 5
+        list_nums = [1, 2, 6, 3]
+        self.assertTrue(find_replace_index(num, list_nums) == 0)
+
+        num = 2
+        list_nums = [3, 5, 1, 3]
+        self.assertTrue(find_replace_index(num, list_nums) == 2)
+
+        num = 2
+        list_nums = [3, 5, 6, 3]
+        self.assertTrue(find_replace_index(num, list_nums) == -1)
+
+        num = 0.2
+        list_nums = [0.3, 0.1, 0.6, 0.3]
+        self.assertTrue(find_replace_index(num, list_nums) == 1)
 
     def tearDown(self) -> None:
         pass
