@@ -146,13 +146,18 @@ search_space_mlp = {
 }
 
 OUTPUT_PATH = 'outputs'
+
+# exit conditions
 test_loss = 0.07
 test_acc = 1.0
-mode = 'max'
 time_limit = 300  # minutes
+gen_count = 100
+
+mode = 'max'
 ga_history_list = []
 ga_history_dict = {}
 best_scores = []
+avg_scores = []
 start_time = get_readable_ctime()
 start_time_epoch = datetime.datetime.now()
 
@@ -228,16 +233,23 @@ def func_eval(model, **kwargs):
     return score[0] if mode == 'min' else score[1]
 
 
-def exit_check(best_score):
+def exit_check(**kwargs):
     # return False
-    return np.abs(best_score) >= test_acc or ((datetime.datetime.now() - start_time_epoch).seconds / 60) >= time_limit
+    best_score = kwargs['best_score']
+    generation_count = kwargs['generation_count']
+    return np.abs(best_score) >= test_acc or (
+            (datetime.datetime.now() - start_time_epoch).seconds / 60) >= time_limit or generation_count >= gen_count
 
 
-def on_generation_end(best_score, generation_count):
+def on_generation_end(**kwargs):
+    best_score = kwargs['best_score']
+    generation_count = kwargs['generation_count']
+    avg = kwargs['avg_score']
     log("on_generation_end: best_score=", best_score, "generation_count=", generation_count)
     ga_history_dict[generation_count] = ga_history_list.copy()
     ga_history_list.clear()
     best_scores.append(best_score)
+    avg_scores.append(avg)
     # if generation_count % 5:
     pickle.dump(ga_history_dict, open(os.path.join(OUTPUT_PATH, 'history_' + start_time), 'wb'))
     pickle.dump(best_scores, open(os.path.join(OUTPUT_PATH, 'best_scores_' + start_time), 'wb'))
@@ -253,7 +265,7 @@ log("Running for Wisconsin data set...")
 ga_engine_ = GAEngine(search_space_mlp, mutation_probability=0.3, exit_check=exit_check,
                       on_generation_end=on_generation_end, func_eval=func_eval, population_size=3, opt_mode=mode).run()
 
-plot_iterable(best_scores)
+plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
 plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
 
 # get_data_wisconsin()

@@ -69,8 +69,10 @@ def get_readable_ctime():
     return time.strftime("%d-%m-%Y %H_%M_%S")
 
 
-def plot_iterable(iterable):
-    plt.plot(iterable)
+def plot_iterable(**kwargs):
+    for key in kwargs.keys():
+        plt.plot(kwargs[key])
+    plt.legend(list(kwargs.keys()))
     plt.show()
 
 

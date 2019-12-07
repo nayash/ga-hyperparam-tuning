@@ -15,6 +15,7 @@ from utils import *
 import numpy as np
 from operator import itemgetter
 from copy import deepcopy
+from statistics import mean
 
 
 class GAEngine(GAAbstract):
@@ -74,8 +75,8 @@ class GAEngine(GAAbstract):
             log("using same parents:", first_parent.get_nn_params(), self.population.get_n_best_individual(
                 second_parent_rank).get_nn_params())
             log("all parents params:\n")
-            for i in self.population.individuals:
-                log(i, '-->', i.get_nn_params())
+            for idx, individual in enumerate(self.population.individuals):
+                log(idx, '-->', individual.get_nn_params())
         return deepcopy(first_parent), deepcopy(self.population.get_n_best_individual(second_parent_rank)), \
                second_parent_rank
 
@@ -190,9 +191,10 @@ class GAEngine(GAAbstract):
 
             best_score = max(fitness1, fitness2)
             log("current generation score: {}".format(best_score))
-            log("All scores", self.population.get_fitness_scores())
-            self.on_generation_end(best_score, count)
-            if self.func_should_exit(best_score):
+            avg = mean(self.population.get_fitness_scores())
+            log("All scores", self.population.get_fitness_scores(), "average score:", avg)
+            self.on_generation_end(best_score=best_score, avg_score=avg, generation_count=count)
+            if self.func_should_exit(best_score=best_score, generation_count=count):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
@@ -200,7 +202,7 @@ class GAEngine(GAAbstract):
             log("Generation End:", count)
             count = count + 1
 
-        log("Best individual is {}, {} and target is {}; generations = {}".format(child1.get_fitness_score(),
+        log("Best individuals are {}, {} and target is {}; generations = {}".format(child1.get_fitness_score(),
                                                                                   child2.get_fitness_score(),
                                                                                   self.target, count))
         log("Best parameter: ", child1.get_nn_params(), "\n", child2.get_nn_params())
