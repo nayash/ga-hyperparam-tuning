@@ -68,11 +68,11 @@ class GAEngine(GAAbstract):
         count = 0
         while first_parent.get_nn_params() == self.population.get_n_best_individual(
                 second_parent_rank).get_nn_params() and count < 30:  # if rank of both parents same, choose another
-            log("calling selection recursive", second_parent_rank, min(5, self.population_size))
+            # log("calling selection recursive", second_parent_rank, min(5, self.population_size))
             second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
             count = count + 1
         if count >= 30:
-            log("using same parents:", first_parent.get_nn_params(), self.population.get_n_best_individual(
+            log("using same parents after 30 attempts:", first_parent.get_nn_params(), self.population.get_n_best_individual(
                 second_parent_rank).get_nn_params())
             log("all parents params:\n")
             for idx, individual in enumerate(self.population.individuals):
@@ -170,7 +170,8 @@ class GAEngine(GAAbstract):
                 child1, child2 = self.cross_over(parent1, parent2)
 
             # mutate
-            if mutation_prob < self.mutation_probability or only_mutation:
+            if mutation_prob < self.mutation_probability or only_mutation or \
+                    parent1.get_nn_params() == parent2.get_nn_params():
                 child1 = self.mutation(parent1 if not child1 else child1)
                 child2 = self.mutation(parent2 if not child2 else child2)
 
@@ -178,7 +179,6 @@ class GAEngine(GAAbstract):
             fitness1 = self.population.calc_fitness_score(child1)
             fitness2 = self.population.calc_fitness_score(child2)
             log("fitness1 = {}, fitness2 = {} and prev_best = {}".format(fitness1, fitness2, prev_best_score))
-            # TODO instead of replacing only best_score, try replacing any of the less fit individual of current gen
 
             # if fitness1 > prev_best_score:
             add_index = self.population.add_individual(child1, fitness1)
@@ -209,6 +209,12 @@ class GAEngine(GAAbstract):
         log("Total run duration:", seconds_to_minutes(time.time() - start_time))
         log_flush()
         return count
+
+    def random_search(self):
+        best_individual = self.population.get_n_best_individual(1)
+        log("Best fitness_score is {} and param is {}".format(best_individual.get_fitness_score(),
+                                                              best_individual.get_nn_params()))
+        return best_individual
 
     def should_exit(self, best_score):
         return np.abs(best_score) < 0.1

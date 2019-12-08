@@ -105,34 +105,75 @@ import numpy as np
 # }
 
 # wisconsin
+# search_space_mlp = {
+#     'input_size': 30,
+#     'batch_size': [10, 50, 100],
+#     'layers': [
+#         {
+#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
+#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_1': ['relu', 'sigmoid']
+#         },
+#         {
+#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
+#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_1': ['relu', 'sigmoid'],
+#
+#             'nodes_layer_2': [10, 50, 60, 80, 100, 500],
+#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_2': ['relu', 'sigmoid']
+#         },
+#         {
+#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
+#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_1': ['relu', 'sigmoid'],
+#
+#             'nodes_layer_2': [10, 50, 60, 80, 100, 500],
+#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_2': ['relu', 'sigmoid'],
+#
+#             'nodes_layer_3': [10, 50, 60, 80, 100, 500],
+#             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
+#             'activation_layer_3': ['relu', 'sigmoid']
+#         }
+#     ],
+#     'lr': [1e-2, 1e-3, 1e-4, 1e-5],
+#     'epochs': [3000],
+#     'optimizer': ['rmsprop', 'sgd', 'adam'],
+#     'output_nodes': 2,
+#     'output_activation': 'softmax',
+#     'loss': 'categorical_crossentropy'
+# }
+
+# magic04
 search_space_mlp = {
-    'input_size': 30,
-    'batch_size': [10, 50, 100],
+    'input_size': 10,
+    'batch_size': [50, 100, 200, 300],
     'layers': [
         {
-            'nodes_layer_1': [10, 50, 60, 80, 100, 500],
+            'nodes_layer_1': [10, 50, 60, 80, 100, 200, 500],
             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_1': ['relu', 'sigmoid']
         },
         {
-            'nodes_layer_1': [10, 50, 60, 80, 100, 500],
+            'nodes_layer_1': [10, 50, 60, 80, 100, 200, 500],
             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_1': ['relu', 'sigmoid'],
 
-            'nodes_layer_2': [10, 50, 60, 80, 100, 500],
+            'nodes_layer_2': [10, 50, 60, 80, 100, 200, 500],
             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_2': ['relu', 'sigmoid']
         },
         {
-            'nodes_layer_1': [10, 50, 60, 80, 100, 500],
+            'nodes_layer_1': [10, 50, 60, 80, 100, 200, 500],
             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_1': ['relu', 'sigmoid'],
 
-            'nodes_layer_2': [10, 50, 60, 80, 100, 500],
+            'nodes_layer_2': [10, 50, 60, 80, 100, 200, 500],
             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_2': ['relu', 'sigmoid'],
 
-            'nodes_layer_3': [10, 50, 60, 80, 100, 500],
+            'nodes_layer_3': [10, 50, 60, 80, 100, 200, 500],
             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
             'activation_layer_3': ['relu', 'sigmoid']
         }
@@ -215,10 +256,28 @@ def get_data_wisconsin():
     return x_train, y_train, x_test, y_test
 
 
+def get_data_magic():
+    df = pd.read_csv('inputs\magic04.data', names=['fLength', 'fWidth', 'fSize', 'fConc', 'fConc1', 'fAsym',
+                                                   'fM3Long', 'fM3Trans', 'fAlpha', 'fDist', 'class'])
+    x = df.iloc[:, 0:10].values
+    y = df['class'].values
+    encoder = LabelEncoder()
+    encoder.fit(y)
+    encoded_y = encoder.transform(y)
+    # convert integers to dummy variables (i.e. one hot encoded)
+    y = np_utils.to_categorical(encoded_y)
+    mm_scaler = MinMaxScaler()
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+    x_train = mm_scaler.fit_transform(x_train)
+    x_test = mm_scaler.transform(x_test)
+    print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
+    return x_train, y_train, x_test, y_test
+
+
 def func_eval(model, **kwargs):
-    x_train, y_train, x_test, y_test = get_data_wisconsin()
+    x_train, y_train, x_test, y_test = get_data_magic()
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20, min_delta=0.0001)
-    history = model.fit(x_train, y_train, batch_size=kwargs['batch_size'], epochs=500, verbose=2,
+    history = model.fit(x_train, y_train, batch_size=kwargs['batch_size'], epochs=kwargs['epochs'], verbose=2,
                         validation_split=0.3, callbacks=[es])
     val_error = np.amin(history.history['val_loss'])
     train_error = np.amin(history.history['loss'])
@@ -253,6 +312,7 @@ def on_generation_end(**kwargs):
     # if generation_count % 5:
     pickle.dump(ga_history_dict, open(os.path.join(OUTPUT_PATH, 'history_' + start_time), 'wb'))
     pickle.dump(best_scores, open(os.path.join(OUTPUT_PATH, 'best_scores_' + start_time), 'wb'))
+    pickle.dump(avg_scores, open(os.path.join(OUTPUT_PATH, 'avg_scores_' + start_time), 'wb'))
     log('history dumped...')
 
 
@@ -261,11 +321,17 @@ def func_eval_dummy(model, **kwargs):
     return np.random.uniform(0, 1, 2)
 
 
-log("Running for Wisconsin data set...")
-ga_engine_ = GAEngine(search_space_mlp, mutation_probability=0.3, exit_check=exit_check,
-                      on_generation_end=on_generation_end, func_eval=func_eval, population_size=3, opt_mode=mode).run()
+log("Running Random search for Magic04 data set...")
+
+# GA search
+# GAEngine(search_space_mlp, mutation_probability=0.3, exit_check=exit_check, on_generation_end=on_generation_end,
+#          func_eval=func_eval, population_size=4, opt_mode=mode).run()
+
+# Random search
+GAEngine(search_space_mlp, exit_check=exit_check, on_generation_end=on_generation_end, func_eval=func_eval,
+         population_size=30, opt_mode=mode).random_search()
 
 plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
-plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
+# plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
 
 # get_data_wisconsin()
