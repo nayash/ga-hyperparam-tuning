@@ -7,6 +7,7 @@ src/__pycache__/
 src/secrets.py
 src/scratch_pad.py
 src/hyperopt_tune.py
+/inputs
 # /stock_history
 
 
