@@ -39,11 +39,21 @@ class GAEngine(GAAbstract):
         if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
         self.opt_mode = kwargs['opt_mode'] if 'opt_mode' in kwargs else 'min'
-        self._population = Population(self.search_space, kwargs['func_eval'], self.opt_mode, self.population_size)
+        list_params = None
+        if 'init_population' in kwargs:
+            init_params = kwargs['init_population']
+            list_params = []
+            for param in init_params:
+                list_params.append(Individual(param))
+
+        self._population = Population(self.search_space, kwargs['func_eval'], self.opt_mode, self.population_size,
+                                      list_params)
         self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else \
             self.on_generation_end_dummy()
         self.param_importance = {}
         self.current_generation_updated_params = set()
+        self.best_scores = []
+        self.best_params = []
 
     @property
     def target(self):
@@ -190,6 +200,8 @@ class GAEngine(GAAbstract):
                 log("added child2 to {} index".format(add_index))
 
             best_score = max(fitness1, fitness2)
+            self.best_scores.append(best_score)
+            self.best_params.append(child1.get_nn_params() if fitness1 > fitness2 else child2.get_nn_params())
             log("current generation score: {}".format(best_score))
             avg = mean(self.population.get_fitness_scores())
             log("All scores", self.population.get_fitness_scores(), "average score:", avg)
@@ -198,17 +210,15 @@ class GAEngine(GAAbstract):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
-            log("curr gen updated param after clear", self.current_generation_updated_params)
             log("Generation End:", count)
             count = count + 1
 
-        log("Best individuals are {}, {} and target is {}; generations = {}".format(child1.get_fitness_score(),
-                                                                                  child2.get_fitness_score(),
-                                                                                  self.target, count))
-        log("Best parameter: ", child1.get_nn_params(), "\n", child2.get_nn_params())
-        log("Total run duration:", seconds_to_minutes(time.time() - start_time))
+        best_index = np.argmax(self.best_scores)
+        log("Best individual (score, param) => {}, {} ".format(self.best_scores[best_index],
+                                                               self.best_params[best_index]))
+        log("GA search duration:", seconds_to_minutes(time.time() - start_time))
         log_flush()
-        return count
+        return count, self.best_scores[best_index], self.best_params[best_index]
 
     def random_search(self):
         best_individual = self.population.get_n_best_individual(1)

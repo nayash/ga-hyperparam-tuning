@@ -1,9 +1,11 @@
 import time
 import numpy as np
+from sklearn.utils import compute_class_weight
+
 from logger import Logger
 from matplotlib import pyplot as plt
 
-_logger = Logger('outputs', 'ga', 20)
+_logger = Logger('outputs', 'ga_rs_synthetic_2', 20)
 
 
 def get_key_in_nested_dict(nested_dict, target_key):

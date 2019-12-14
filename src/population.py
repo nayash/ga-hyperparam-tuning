@@ -30,6 +30,7 @@ class Population:
             if not (population_size == len(individuals)):
                 raise Exception("population size and length of individuals passed are different")
             self.individuals = individuals
+            log("using passed individuals")
         log("Initial population :")
         for i, individual in enumerate(self.individuals):
             log(i, '=>', individual.get_nn_params(), '\n')
@@ -42,7 +43,8 @@ class Population:
 
     def calc_fitness_score(self, individual: Individual):
         mul = get_mode_multiplier(self.mode)
-        score = mul * self.func_eval(individual.get_model(), batch_size=individual.get_nn_params()['batch_size'])
+        score = mul * self.func_eval(individual.get_model(), batch_size=individual.get_nn_params()['batch_size'],
+                                     epochs=individual.get_nn_params()['epochs'])
         return score
 
     def calc_fitness_scores(self):
