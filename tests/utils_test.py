@@ -11,6 +11,7 @@
 
 import sys
 from copy import deepcopy
+import time
 
 from src.individual import Individual
 
@@ -81,12 +82,12 @@ class UtilsTest(unittest.TestCase):
         self.assertTrue(type(choose_from_search_space(self.search_space['lr'])) is float)
         self.assertTrue(type(choose_from_search_space(self.search_space['loss'])) is str)
         print("choose_space_timeit", timeit.timeit(lambda: choose_from_search_space(self.search_space), number=10000))
-        print("choose_space_list_timeit",
-              timeit.timeit(lambda: [Individual(choose_from_search_space(self.search_space)) for i in
-                                     range(100)], number=5))
-        print("choose_space_list_timeit_deepcopy",
-              timeit.timeit(lambda: [Individual(choose_from_search_space(self.search_space)).__deepcopy__() for i in
-                                     range(100)], number=5))
+        # print("choose_space_list_timeit",
+        #       timeit.timeit(lambda: [Individual(choose_from_search_space(self.search_space)) for i in
+        #                              range(100)], number=5))
+        # print("choose_space_list_timeit_deepcopy",
+        #       timeit.timeit(lambda: [Individual(choose_from_search_space(self.search_space)).__deepcopy__() for i in
+        #                              range(100)], number=5))
 
     def test_filter_list_by_prefix(self):
         d = {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 300, 'do_layer_1': 0.0, 'activation_layer_1':
@@ -121,6 +122,12 @@ class UtilsTest(unittest.TestCase):
         num = 0.2
         list_nums = [0.3, 0.1, 0.6, 0.3]
         self.assertTrue(find_replace_index(num, list_nums) == 1)
+
+    def test_plot_iterable(self):
+        l1 = list(np.random.uniform(0, 100, 30))
+        plot_iterable(list1=l1)
+        time.sleep(2)
+        plot_iterable(list2=list(np.random.uniform(0, 100, 30)))
 
     def tearDown(self) -> None:
         pass

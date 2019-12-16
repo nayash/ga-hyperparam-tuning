@@ -75,7 +75,7 @@ def plot_iterable(**kwargs):
     for key in kwargs.keys():
         plt.plot(kwargs[key])
     plt.legend(list(kwargs.keys()))
-    plt.show(block=False)
+    plt.show()
 
 
 def smooth_coordinates(x, y):
