@@ -36,6 +36,7 @@ class GAEngine(GAAbstract):
         self.population_size = kwargs['population_size'] if 'population_size' in kwargs else 5
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.2
         self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
+        func_create_model = kwargs['func_create_model'] if 'func_create_model' in kwargs else None
         self.search_space = search_space
         if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
@@ -48,7 +49,7 @@ class GAEngine(GAAbstract):
                 list_params.append(Individual(param))
 
         self._population = Population(self.search_space, kwargs['func_eval'], self.opt_mode, self.population_size,
-                                      list_params)
+                                      list_params, func_create_model=func_create_model)
         self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else \
             self.on_generation_end_dummy()
         self.param_importance = {}

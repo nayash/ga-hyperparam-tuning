@@ -13,11 +13,12 @@ import numpy as np
 from individual import Individual
 from copy import deepcopy
 
+
 # TODO accept function as param for evaluate_model
 
 
 class Population:
-    def __init__(self, search_space, func_eval, mode, population_size=5, individuals=None):
+    def __init__(self, search_space, func_eval, mode, population_size=5, individuals=None, func_create_model=None):
         self.search_space = search_space
         self.population_size = population_size
         self.func_eval = func_eval
@@ -25,8 +26,10 @@ class Population:
         self.individuals = [None] * population_size
         print("choosing individual from search space...")
         if individuals is None:
-            self.individuals = [Individual(choose_from_search_space(search_space)).__deepcopy__() for i in
-                                range(population_size)]
+            self.individuals = [
+                Individual(choose_from_search_space(search_space), func_create_model=func_create_model).__deepcopy__()
+                for i in
+                range(population_size)]
         else:
             if not (population_size == len(individuals)):
                 raise Exception("population size and length of individuals passed are different")
@@ -74,7 +77,7 @@ class Population:
             return -1
 
     def set_fitness_scores(self, scores):
-        self.__fitness_scores = get_mode_multiplier(self.mode)*scores
+        self.__fitness_scores = get_mode_multiplier(self.mode) * scores
         for i, score in enumerate(self.__fitness_scores):
             self.individuals[i].set_fitness_score(score)
 

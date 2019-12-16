@@ -24,7 +24,8 @@ from utils import *
 class Individual:
     def __init__(self, nn_prams: dict, **kwargs):
         self.__nn_params = nn_prams
-        self.func_model = kwargs['func_model'] if 'func_model' in kwargs else self.create_model
+        self.func_model = kwargs['func_create_model'] if 'func_create_model' in kwargs and kwargs[
+            'func_create_model'] else self.create_model
         self.__model = self.func_model(nn_prams)
         self.__fitness_score = 0.0
 
@@ -55,11 +56,13 @@ class Individual:
                 i = str(i + 1)
                 if i == '1':
                     model.add(
-                        Dense(params["nodes_layer_" + i], input_shape=(params['input_size'], ), activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                        Dense(params["nodes_layer_" + i], input_shape=(params['input_size'],),
+                              activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                               else None))
                 else:
                     model.add(
-                        Dense(params["nodes_layer_" + i], activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                        Dense(params["nodes_layer_" + i],
+                              activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                               else None))
                 if 'do_layer_' + i in params:
                     model.add(Dropout(params['do_layer_' + i]))
