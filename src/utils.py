@@ -5,7 +5,7 @@ from sklearn.utils import compute_class_weight
 from logger import Logger
 from matplotlib import pyplot as plt
 
-_logger = Logger('outputs', 'ga_rs_synthetic_2', 20)
+_logger = Logger('outputs', 'ga_rs_synthetic_0.02_0.4', 20)
 
 
 def get_key_in_nested_dict(nested_dict, target_key):
@@ -75,7 +75,7 @@ def plot_iterable(**kwargs):
     for key in kwargs.keys():
         plt.plot(kwargs[key])
     plt.legend(list(kwargs.keys()))
-    plt.show()
+    plt.show(block=False)
 
 
 def smooth_coordinates(x, y):

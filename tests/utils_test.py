@@ -10,10 +10,15 @@
 
 
 import sys
+from copy import deepcopy
+
+from src.individual import Individual
+
 sys.path.append('../src')
 
 from src.utils import *
 import unittest
+import timeit
 
 
 class UtilsTest(unittest.TestCase):
@@ -75,16 +80,23 @@ class UtilsTest(unittest.TestCase):
         print("layers choose", choose_from_search_space(self.search_space['layers'], 'layers'))
         self.assertTrue(type(choose_from_search_space(self.search_space['lr'])) is float)
         self.assertTrue(type(choose_from_search_space(self.search_space['loss'])) is str)
+        print("choose_space_timeit", timeit.timeit(lambda: choose_from_search_space(self.search_space), number=10000))
+        print("choose_space_list_timeit",
+              timeit.timeit(lambda: [Individual(choose_from_search_space(self.search_space)) for i in
+                                     range(100)], number=5))
+        print("choose_space_list_timeit_deepcopy",
+              timeit.timeit(lambda: [Individual(choose_from_search_space(self.search_space)).__deepcopy__() for i in
+                                     range(100)], number=5))
 
     def test_filter_list_by_prefix(self):
         d = {'input_size': 784, 'batch_size': 120, 'nodes_layer_1': 300, 'do_layer_1': 0.0, 'activation_layer_1':
-             'sigmoid', 'nodes_layer_2': 500, 'do_layer_2': 0.3, 'activation_layer_2': 'sigmoid', 'lr': 1e-07, 'epochs':
-             3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss':
-             'categorical_crossentropy'}
+            'sigmoid', 'nodes_layer_2': 500, 'do_layer_2': 0.3, 'activation_layer_2': 'sigmoid', 'lr': 1e-07, 'epochs':
+                 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation': 'softmax', 'loss':
+                 'categorical_crossentropy'}
         l = list(d.keys())
         self.assertEqual(sorted(filter_list_by_prefix(l, ('nodes_', 'do_'))), sorted(['nodes_layer_1', 'nodes_layer_2',
                                                                                       'do_layer_1', 'do_layer_2']))
-        self.assertTrue(len(filter_list_by_prefix(l, ('do_', 'output_'), True)) == len(l)-4)
+        self.assertTrue(len(filter_list_by_prefix(l, ('do_', 'output_'), True)) == len(l) - 4)
 
     def test_get_mode_multiplier(self):
         self.assertEqual(get_mode_multiplier('min'), -1, "min mode multiplier wrong")

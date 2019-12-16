@@ -23,8 +23,9 @@ class Population:
         self.func_eval = func_eval
         self.mode = mode
         self.individuals = [None] * population_size
+        print("choosing individual from search space...")
         if individuals is None:
-            self.individuals = [deepcopy(Individual(choose_from_search_space(search_space))) for i in
+            self.individuals = [Individual(choose_from_search_space(search_space)).__deepcopy__() for i in
                                 range(population_size)]
         else:
             if not (population_size == len(individuals)):

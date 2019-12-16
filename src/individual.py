@@ -92,5 +92,12 @@ class Individual:
     def get_nn_params(self):
         return self.__nn_params
 
+    def __deepcopy__(self, memodict={}):
+        copy = Individual(self.__nn_params.copy())
+        copy.func_model = self.func_model
+        copy.__model = self.__model
+        copy.__fitness_score = self.__fitness_score
+        return copy
+
     # def __eq__(self, other):
     #     return self.__nn_params == other.get_nn_params() and self.__fitness_score == other.get_fitness_score()

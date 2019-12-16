@@ -43,7 +43,7 @@ class GAAbstract(ABC):
     def cross_over(self, individual1, individual2):
         pass
 
-    def run(self):
+    def ga_search(self):
         pass
 
     def should_exit(self):

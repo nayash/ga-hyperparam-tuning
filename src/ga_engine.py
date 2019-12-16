@@ -20,7 +20,7 @@ from statistics import mean
 
 class GAEngine(GAAbstract):
     """
-    GAEngine drives the whole algorithm that finds optimal solution for the problem.
+    GAEngine drives the whole algorithm that finds optimal solution for the problem: finding optimal hyperparameters.
     :param search_space: search domain to limit the search for optimal hyperparameters for Neural Net. Example can be
     found in main.py
     :param kwargs: list of optional arguments:
@@ -29,6 +29,7 @@ class GAEngine(GAAbstract):
     exit_check: function to check exit condition and return True to stop the search
     on_generation_end: called on end of each generation
     opt_mode: optimization mode ['min', 'max'] default 'min'
+    init_population: list of individuals
     """
 
     def __init__(self, search_space, **kwargs):
@@ -82,12 +83,13 @@ class GAEngine(GAAbstract):
             second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
             count = count + 1
         if count >= 30:
-            log("using same parents after 30 attempts:", first_parent.get_nn_params(), self.population.get_n_best_individual(
-                second_parent_rank).get_nn_params())
+            log("using same parents after 30 attempts:", first_parent.get_nn_params(),
+                self.population.get_n_best_individual(
+                    second_parent_rank).get_nn_params())
             log("all parents params:\n")
             for idx, individual in enumerate(self.population.individuals):
                 log(idx, '-->', individual.get_nn_params())
-        return deepcopy(first_parent), deepcopy(self.population.get_n_best_individual(second_parent_rank)), \
+        return first_parent.__deepcopy__(), self.population.get_n_best_individual(second_parent_rank).__deepcopy__(), \
                second_parent_rank
 
     def on_generation_end_dummy(self, *args):
@@ -160,7 +162,7 @@ class GAEngine(GAAbstract):
         individual2.set_nn_params(ind2_params)
         return individual1, individual2
 
-    def run(self, only_mutation=False):
+    def ga_search(self, only_mutation=False):
         count = 0
         # mul = get_mode_multiplier(self.opt_mode)
         best_score = -np.inf
@@ -206,7 +208,7 @@ class GAEngine(GAAbstract):
             avg = mean(self.population.get_fitness_scores())
             log("All scores", self.population.get_fitness_scores(), "average score:", avg)
             self.on_generation_end(best_score=best_score, avg_score=avg, generation_count=count)
-            if self.func_should_exit(best_score=best_score, generation_count=count):
+            if self.func_should_exit(best_score=best_score, generation_count=count, population_avg=avg):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
