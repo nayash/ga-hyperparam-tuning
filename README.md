@@ -11,9 +11,11 @@ Since I don't have enough feedback on it's performance, I have not uploaded a in
 3. define the required functions like evaluation function which would try out your model and return loss/accuracy.
 4. decide an optimization mode; 'max' if you want to maximize the result (e.g. while using accuracy) or 'min' while using loss.
 5. then finally call GAEngine like this:
-# GAEngine(search_space_mlp, mutation_probability=0.4, exit_check=exit_check,
-#                                 on_generation_end=on_generation_end, func_eval=func_eval,
-#                                 population_size=5, opt_mode=mode).ga_search()
+```
+GAEngine(search_space_mlp, mutation_probability=0.4, exit_check=exit_check,
+                                 on_generation_end=on_generation_end, func_eval=func_eval,
+                                 population_size=5, opt_mode=mode).ga_search()
+```                                 
 
 The functions "exit_check" and "on_generation_end" give you better control over when to end the search. All these examples can be found in the main.py file included in the project.
 I will be writing a detailed blog on this and post the link here.
