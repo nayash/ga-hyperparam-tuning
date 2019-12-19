@@ -7,6 +7,7 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
+
 import datetime
 
 from ga_abstract import GAAbstract
@@ -38,6 +39,7 @@ class GAEngine(GAAbstract):
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.3
         self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
         func_create_model = kwargs['func_create_model'] if 'func_create_model' in kwargs else None
+        self.mt_dna_reset_frequency = kwargs['mt_dna_reset_frequency'] if 'mt_dna_reset_frequency' in kwargs else 3
         self.patience_count = 0
         self.prev_population_avg = 0
         self.search_space = search_space
@@ -83,17 +85,21 @@ class GAEngine(GAAbstract):
     def selection(self):
         second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
         first_parent = self.population.get_n_best_individual(1)
+        second_parent = self.population.get_n_best_individual(second_parent_rank)
         print("second_rank", second_parent_rank)
         count = 0
-        while first_parent.get_nn_params() == self.population.get_n_best_individual(
-                second_parent_rank).get_nn_params() and count < 30:  # if rank of both parents same, choose another
-            # log("calling selection recursive", second_parent_rank, min(5, self.population_size))
+        while (first_parent.get_nn_params() == second_parent.get_nn_params() or first_parent.mt_dna == second_parent.mt_dna) \
+                and count < 30:
+            # if rank of both parents same, choose another
+            log("calling selection recursive", second_parent_rank, min(5, self.population_size),
+                first_parent.mt_dna, second_parent.mt_dna)
             second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
+            second_parent = self.population.get_n_best_individual(second_parent_rank)
             count = count + 1
+
         if count >= 30:
-            log("using same parents after 30 attempts:", first_parent.get_nn_params(),
-                self.population.get_n_best_individual(
-                    second_parent_rank).get_nn_params())
+            log("using same/related parents after 30 attempts:", first_parent.get_nn_params(),
+                second_parent.get_nn_params())
             log("all parents params:\n")
             for idx, individual in enumerate(self.population.individuals):
                 log(idx, '-->', individual.get_nn_params())
@@ -188,6 +194,7 @@ class GAEngine(GAAbstract):
         self.prev_population_avg = 0
         while True:
             log("Generation Start:", count)
+            log("mtDNAs-->", ", ".join([individual.mt_dna for individual in self.population.individuals]))
             prev_best_score = self.population.get_n_best_individual(1).get_fitness_score()
             # selection
             parent1, parent2, second_parent_rank = self.selection()
@@ -205,6 +212,10 @@ class GAEngine(GAAbstract):
                     parent1.get_nn_params() == parent2.get_nn_params():
                 child1 = self.mutation(parent1 if not child1 else child1)
                 child2 = self.mutation(parent2 if not child2 else child2)
+
+            # set mtDNA; second parent acts as female which transfers mtDNA to children unmodified
+            child1.mt_dna = parent2.mt_dna
+            child2.mt_dna = parent2.mt_dna
 
             log("Evaluating params:\n{}\nand\n{}".format(child1.get_nn_params(), child2.get_nn_params()))
             fitness1 = self.population.calc_fitness_score(child1)
@@ -233,6 +244,8 @@ class GAEngine(GAAbstract):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
+            if count + 1 % self.mt_dna_reset_frequency == 0:
+                self.population.reset_mtdna()
             log("Generation End:", count)
             count = count + 1
 

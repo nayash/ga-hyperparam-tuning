@@ -29,7 +29,7 @@ class Individual:
             'func_create_model'] else self.create_model
         self.__model = self.func_model(nn_prams)
         self.__fitness_score = 0.0
-        self.id = uuid.uuid4().hex
+        self.mt_dna = uuid.uuid4().hex
 
     def create_model(self, params: dict = None):
         """
@@ -103,6 +103,9 @@ class Individual:
         copy.__model = self.__model
         copy.__fitness_score = self.__fitness_score
         return copy
+
+    def reset_id(self):
+        self.mt_dna = uuid.uuid4().hex
 
     # def __eq__(self, other):
     #     return self.__nn_params == other.get_nn_params() and self.__fitness_score == other.get_fitness_score()

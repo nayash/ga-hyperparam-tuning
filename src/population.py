@@ -95,3 +95,10 @@ class Population:
 
     def get_fitness_scores(self):
         return self.__fitness_scores
+
+    def reset_mtdna(self):
+        temp = ""
+        for individual in self.individuals:
+            individual.reset_id()
+            temp = temp + individual.mt_dna + ","
+        log("reseting mtDNA", temp)
