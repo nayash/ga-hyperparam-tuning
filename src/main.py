@@ -80,214 +80,9 @@ from hyperopt import Trials, STATUS_OK, tpe, fmin, hp, rand
 #     'loss': 'categorical_crossentropy'
 # }
 
-# iris
-# search_space_mlp = {
-#     'input_size': 4,
-#     'batch_size': [10, 50, 100],
-#     'layers': [
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': [10, 50, 60, 80, 100, 500],
-#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_2': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': [10, 50, 60, 80, 100, 500],
-#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_2': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_3': [10, 50, 60, 80, 100, 500],
-#             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_3': ['relu', 'sigmoid']
-#         }
-#     ],
-#     'lr': [1e-2, 1e-3, 1e-4, 1e-5],
-#     'epochs': [3000],
-#     'optimizer': ['rmsprop', 'sgd', 'adam'],
-#     'output_nodes': 3,
-#     'output_activation': 'softmax',
-#     'loss': 'categorical_crossentropy'
-# }
-
-# wisconsin
-# search_space_mlp = {
-#     'input_size': 30,
-#     'batch_size': [10, 50, 100],
-#     'layers': [
-#         {
-#             'nodes_layer_1': list(np.arange(0, 501)),
-#             'do_layer_1': list(np.linspace(0, 1.0)),
-#             'activation_layer_1': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': list(np.arange(0, 501)),
-#             'do_layer_1': list(np.linspace(0, 1.0)),
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': list(np.arange(0, 501)),
-#             'do_layer_2': list(np.linspace(0, 1.0)),
-#             'activation_layer_2': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': list(np.arange(0, 501)),
-#             'do_layer_1': list(np.linspace(0, 1.0)),
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': list(np.arange(0, 501)),
-#             'do_layer_2': list(np.linspace(0, 1.0)),
-#             'activation_layer_2': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_3': list(np.arange(0, 501)),
-#             'do_layer_3': list(np.linspace(0, 1.0)),
-#             'activation_layer_3': ['relu', 'sigmoid']
-#         }
-#     ],
-#     'lr': [1e-2, 1e-3, 1e-4, 1e-5],
-#     'epochs': [3000],
-#     'optimizer': ['rmsprop', 'sgd', 'adam'],
-#     'output_nodes': 2,
-#     'output_activation': 'softmax',
-#     'loss': 'categorical_crossentropy'
-# }
-
-# stock_price
-# search_space_mlp = {
-#             'input_size': 225,
-#             'batch_size': [40, 60, 80, 100, 120, 150],
-#             'layers': [
-#                 {
-#                     'nodes_layer_1': [100, 300, 500, 700, 900],
-#                     'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-#                     'activation_layer_1': ['relu', 'sigmoid']
-#                 },
-#                 {
-#                     'nodes_layer_1': [100, 300, 500, 700, 900],
-#                     'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-#                     'activation_layer_1': ['relu', 'sigmoid'],
-#
-#                     'nodes_layer_2': [100, 300, 500, 700, 900],
-#                     'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-#                     'activation_layer_2': ['relu', 'sigmoid']
-#                 },
-#                 {
-#                     'nodes_layer_1': [100, 300, 500, 700, 900],
-#                     'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-#                     'activation_layer_1': ['relu', 'sigmoid'],
-#
-#                     'nodes_layer_2': [100, 300, 500, 700, 900],
-#                     'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-#                     'activation_layer_2': ['relu', 'sigmoid'],
-#
-#                     'nodes_layer_3': [100, 300, 500, 700, 900],
-#                     'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-#                     'activation_layer_3': ['relu', 'sigmoid']
-#                 }
-#                 ],
-#             "lr": [1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-#             "epochs": [3000],
-#             "optimizer": ["rmsprop", "sgd", "adam"],
-#             'output_nodes': 3,
-#             'output_activation': 'softmax',
-#             'loss': 'categorical_crossentropy'
-#         }
-
-# magic04
-# search_space_mlp = {
-#     'input_size': 10,
-#     'batch_size': [50, 100, 200, 300],
-#     'layers': [
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 200, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 200, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': [10, 50, 60, 80, 100, 200, 500],
-#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_2': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 200, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': [10, 50, 60, 80, 100, 200, 500],
-#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_2': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_3': [10, 50, 60, 80, 100, 200, 500],
-#             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_3': ['relu', 'sigmoid']
-#         }
-#     ],
-#     'lr': [1e-2, 1e-3, 1e-4, 1e-5],
-#     'epochs': [3000],
-#     'optimizer': ['rmsprop', 'sgd', 'adam'],
-#     'output_nodes': 2,
-#     'output_activation': 'softmax',
-#     'loss': 'categorical_crossentropy'
-# }
-
-# Anuran calls
-# search_space_mlp = {
-#     'input_size': 22,
-#     'batch_size': [10, 50, 100],
-#     'layers': [
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': [10, 50, 60, 80, 100, 500],
-#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_2': ['relu', 'sigmoid']
-#         },
-#         {
-#             'nodes_layer_1': [10, 50, 60, 80, 100, 500],
-#             'do_layer_1': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_1': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_2': [10, 50, 60, 80, 100, 500],
-#             'do_layer_2': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_2': ['relu', 'sigmoid'],
-#
-#             'nodes_layer_3': [10, 50, 60, 80, 100, 500],
-#             'do_layer_3': [0.0, 0.1, 0.2, 0.3, 0.4],
-#             'activation_layer_3': ['relu', 'sigmoid']
-#         }
-#     ],
-#     'lr': [1e-2, 1e-3, 1e-4, 1e-5],
-#     'epochs': [3000],
-#     'optimizer': ['rmsprop', 'sgd', 'adam'],
-#     'output_nodes': 4,
-#     'output_activation': 'softmax',
-#     'loss': 'categorical_crossentropy'
-# }
-
 # synthetic data params
 search_space_mlp = {
-    'input_size': 784,
+    'input_size': 200,
     'batch_size': [40, 60, 80, 100, 120, 150],
     'layers': [
         {
@@ -321,13 +116,13 @@ search_space_mlp = {
     "lr": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
     "epochs": [3000],
     "optimizer": ["rmsprop", "sgd", "adam"],
-    'output_nodes': 10,
+    'output_nodes': 3,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
 
 search_space_mlp_hyperopt = {
-    'input_size': 784,
+    'input_size': 200,
     'batch_size': hp.choice('bs', [40, 60, 80, 100, 120, 150]),
     'layers': hp.choice('layers_', [
         {
@@ -361,7 +156,7 @@ search_space_mlp_hyperopt = {
     "lr": hp.choice('lr', [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]),
     "epochs": hp.choice('epochs', [3000]),
     "optimizer": hp.choice('opt', ["rmsprop", "sgd", "adam"]),
-    'output_nodes': 10,
+    'output_nodes': 3,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
@@ -386,33 +181,6 @@ patience_count = 0
 prev_population_avg = 0
 run_id = 'ga_hp_mnist'  # change utils log prefix
 
-# last one good => 93%
-bad_params_wisconsin = [{'input_size': 30, 'batch_size': 100, 'nodes_layer_1': 435, 'do_layer_1': 0.02040816326530612,
-                         'activation_layer_1': 'sigmoid', 'nodes_layer_2': 248, 'do_layer_2': 0.061224489795918366,
-                         'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd',
-                         'output_nodes': 2, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy',
-                         'nodes_layer_3': 411, 'do_layer_3': 0.6938775510204082, 'activation_layer_3': 'sigmoid'},
-                        {'input_size': 30, 'batch_size': 101, 'nodes_layer_1': 434, 'do_layer_1': 0.02040816326530612,
-                         'activation_layer_1': 'sigmoid', 'nodes_layer_2': 247, 'do_layer_2': 0.061224489795918366,
-                         'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd',
-                         'output_nodes': 2, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy',
-                         'nodes_layer_3': 411, 'do_layer_3': 0.6938775510204082, 'activation_layer_3': 'sigmoid'},
-                        {'input_size': 30, 'batch_size': 100, 'nodes_layer_1': 434, 'do_layer_1': 0.01100000000000000,
-                         'activation_layer_1': 'sigmoid', 'nodes_layer_2': 247, 'do_layer_2': 0.061224489795918366,
-                         'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd',
-                         'output_nodes': 2, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy',
-                         'nodes_layer_3': 411, 'do_layer_3': 0.6938775510204082, 'activation_layer_3': 'sigmoid'},
-                        {'input_size': 30, 'batch_size': 100, 'nodes_layer_1': 434, 'do_layer_1': 0.02040816326530612,
-                         'activation_layer_1': 'sigmoid', 'nodes_layer_2': 247, 'do_layer_2': 0.061224489795918366,
-                         'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd',
-                         'output_nodes': 2, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy',
-                         'nodes_layer_3': 410, 'do_layer_3': 0.5938775510204082, 'activation_layer_3': 'sigmoid'},
-                        {'input_size': 30, 'batch_size': 100, 'nodes_layer_1': 434, 'do_layer_1': 0.03040816326530612,
-                         'activation_layer_1': 'sigmoid', 'nodes_layer_2': 247, 'do_layer_2': 0.051224489795918366,
-                         'activation_layer_2': 'relu', 'lr': 0.001, 'epochs': 3000, 'optimizer': 'sgd',
-                         'output_nodes': 2, 'output_activation': 'softmax', 'loss': 'categorical_crossentropy',
-                         'nodes_layer_3': 410, 'do_layer_3': 0.6938775510204082, 'activation_layer_3': 'sigmoid'}]
-
 
 def get_data_mnist():
     num_classes = 10
@@ -425,184 +193,6 @@ def get_data_mnist():
     x_test /= 255
     y_train = keras.utils.to_categorical(y_train, num_classes)
     y_test = keras.utils.to_categorical(y_test, num_classes)
-    return x_train, y_train, x_test, y_test
-
-
-def get_data_iris():
-    dataframe = pd.read_csv("./inputs/Iris.csv")
-    dataset = dataframe.values
-    X = dataset[:, 1:5].astype(float)
-    Y = dataset[:, 5]
-    # encode class values as integers
-    encoder = LabelEncoder()
-    encoder.fit(Y)
-    encoded_y = encoder.transform(Y)
-    # convert integers to dummy variables (i.e. one hot encoded)
-    dummy_y = np_utils.to_categorical(encoded_y)
-    x_train, x_test, y_train, y_test = train_test_split(X, dummy_y, test_size=0.3)
-    return x_train, y_train, x_test, y_test
-
-
-def get_data_wisconsin():
-    dataframe = pd.read_csv("./inputs/breast_cancer.csv")
-    temp = dataframe.iloc[:, 2:]
-    temp.drop('Unnamed: 32', axis=1, inplace=True)
-    X = temp.values
-    series = dataframe.iloc[:, 1]
-    print("value_counts", series.value_counts())
-    # Y = np.zeros(len(series))
-    # Y[series == 'M'] = 1
-    encoder = LabelEncoder()
-    encoder.fit(series)
-    encoded_y = encoder.transform(series)
-    # convert integers to dummy variables (i.e. one hot encoded)
-    Y = np_utils.to_categorical(encoded_y)
-    # print(Y[20:30])
-    # print(X.shape, Y.shape)
-    mm_scaler = MinMaxScaler()
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
-    x_train = mm_scaler.fit_transform(x_train)
-    x_test = mm_scaler.transform(x_test)
-    print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
-    return x_train, y_train, x_test, y_test
-
-
-def get_data_magic():
-    df = pd.read_csv('inputs\magic04.data', names=['fLength', 'fWidth', 'fSize', 'fConc', 'fConc1', 'fAsym',
-                                                   'fM3Long', 'fM3Trans', 'fAlpha', 'fDist', 'class'])
-    x = df.iloc[:, 0:10].values
-    y = df['class'].values
-    encoder = LabelEncoder()
-    encoder.fit(y)
-    encoded_y = encoder.transform(y)
-    # convert integers to dummy variables (i.e. one hot encoded)
-    y = np_utils.to_categorical(encoded_y)
-    mm_scaler = MinMaxScaler()
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
-    x_train = mm_scaler.fit_transform(x_train)
-    x_test = mm_scaler.transform(x_test)
-    print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
-    return x_train, y_train, x_test, y_test
-
-
-def get_data_anuran():
-    df = pd.read_csv('inputs\Frogs_MFCCs.csv')
-    x = df.iloc[:, :22].values
-    y = df['Family']
-    encoder = LabelEncoder()
-    encoder.fit(y)
-    encoded_y = encoder.transform(y)
-    # convert integers to dummy variables (i.e. one hot encoded)
-    y = np_utils.to_categorical(encoded_y)
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
-    print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)
-    return x_train, y_train, x_test, y_test
-
-
-def get_data_stock():
-    def get_sample_weights(y):
-        y = y.astype(int)  # compute_class_weight needs int labels
-        class_weights = compute_class_weight('balanced', np.unique(y), y)
-        log("class weights are {}".format(class_weights), np.unique(y))
-        log("value_counts", np.unique(y, return_counts=True))
-        sample_weights = y.copy().astype(float)
-        for i in np.unique(y):
-            sample_weights[sample_weights == i] = class_weights[i]
-            # sample_weights = np.where(sample_weights == i, class_weights[int(i)], y_)
-
-        return sample_weights
-
-    def get_SMA(df, col_name, intervals):
-        """
-        Momentum indicator
-        """
-        stime = time.time()
-        log("Calculating SMA")
-        df_ss = sdf.retype(df)
-        for i in tqdm(intervals):
-            df['sma_' + str(i)] = df_ss[col_name + '_' + str(i) + '_sma']
-            del df['close_' + str(i) + '_sma']
-
-        log("Calculation of SMA Done", stime)
-
-    def create_label_30_150_MA(df, col_name):
-        log("creating label with create_label_30_150_MA")
-
-        def detect_crossover(diff_prev, diff):
-            if diff_prev >= 0 and diff < 0:
-                # buy
-                return 1
-            elif diff_prev <= 0 and diff > 0:
-                return 0
-            else:
-                return 2
-
-        get_SMA(df, 'close', [30, 150])
-        labels = np.zeros((len(df)))
-        labels[:] = np.nan
-        diff = df['sma_30'] - df['sma_150']
-        diff_prev = diff.shift()
-        df['diff_prev'] = diff_prev
-        df['diff'] = diff
-
-        res = df.apply(lambda row: detect_crossover(row['diff_prev'], row['diff']), axis=1)
-        log("labels count", np.unique(res, return_counts=True))
-        df.drop(columns=['diff_prev', 'diff'], inplace=True)
-        return res
-
-    # generate train batch
-    df = pickle.load(open('inputs\df_MSFT', 'rb'))
-    prev_len = len(df)
-    df.dropna(inplace=True)
-    df.reset_index(drop=True, inplace=True)
-    log("Dropped {0} nan rows before label calculation".format(prev_len - len(df)))
-
-    if 'labels' not in df.columns:
-        df['labels'] = create_label_30_150_MA(df, 'close')
-        pickle.dump(df, open(os.path.join("inputs", "df_MSFT"), 'wb'))
-    else:
-        log("labels already calculated")
-
-    prev_len = len(df)
-    df.dropna(inplace=True)
-    df.reset_index(drop=True, inplace=True)
-    log("Dropped {0} nan rows after label calculation".format(prev_len - len(df)))
-
-    train_duration_years = 6
-    test_duration_years = 2
-    start_date = df.iloc[0]['timestamp']
-    end_date = start_date + pd.offsets.DateOffset(years=train_duration_years)
-    df_batch = df[(df["timestamp"] >= start_date) & (df["timestamp"] <= end_date)]
-
-    mm_scaler = MinMaxScaler(feature_range=(0, 1), copy=True)
-    x_train = mm_scaler.fit_transform(df_batch.loc[:, 'rsi_6':'eom_20'])
-    y_ = np.asarray(df_batch['labels'])
-
-    sample_weights = get_sample_weights(y_)
-
-    # OHE can be fit once outside
-    one_hot_enc = OneHotEncoder(sparse=False, categories='auto')  # , categories='auto'
-    y_train = one_hot_enc.fit_transform(y_.reshape(-1, 1))
-    if len(np.unique(y_)) != 3:
-        log('Number of labels ({}) wrong for batch {} to {}. Labels={}'.
-            format(len(np.unique(y_train)), start_date, end_date, np.unique(y_, return_counts=True)))
-        sys.exit()
-
-    # generate test batch
-    test_start_date = end_date + pd.offsets.DateOffset(days=1)
-    test_end_date = test_start_date + pd.offsets.DateOffset(years=test_duration_years)
-
-    is_last_batch = False
-    if (df.tail(1).iloc[0]["timestamp"] - test_end_date).days < 180:  # 6 months
-        is_last_batch = True
-
-    df_batch_test = df[(df["timestamp"] >= test_start_date) & (df["timestamp"] <= test_end_date)]
-    x_test = mm_scaler.transform(df_batch_test.loc[:, 'rsi_6':'eom_20'])
-    y_ = np.asarray(df_batch_test['labels'])
-    y_test = one_hot_enc.transform(y_.reshape(-1, 1))
-
-    log("stock train/test size", x_train.shape, y_train.shape, x_test.shape, y_test.shape)
-    # white_noise_check(["close_train", "close_test"], logger, df_batch["close"], df_batch_test["close"])
     return x_train, y_train, x_test, y_test
 
 
@@ -622,7 +212,7 @@ def get_synthetic_data():
     return x_train, y_train, x_test, y_test
 
 
-x_train, y_train, x_test, y_test = get_data_mnist()
+x_train, y_train, x_test, y_test = get_synthetic_data()
 
 
 def func_eval(model, **kwargs):
@@ -709,11 +299,13 @@ def create_model(params: dict = None):
             i = str(i + 1)
             if i == '1':
                 model.add(
-                    Dense(params["nodes_layer_" + i], input_shape=(params['input_size'], ), activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                    Dense(params["nodes_layer_" + i], input_shape=(params['input_size'],),
+                          activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                           else None))
             else:
                 model.add(
-                    Dense(params["nodes_layer_" + i], activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                    Dense(params["nodes_layer_" + i],
+                          activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                           else None))
             if 'do_layer_' + i in params:
                 model.add(Dropout(params['do_layer_' + i]))
@@ -735,30 +327,28 @@ log("Running " + run_id)
 
 # GA search
 log("********************** GA Search **********************")
-num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, exit_check=exit_check,
-                                 on_generation_end=on_generation_end, func_eval=func_eval,
-                                 population_size=5, opt_mode=mode).ga_search()
+num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, on_generation_end=on_generation_end,
+                                 func_eval=func_eval, population_size=5, opt_mode=mode).ga_search(time_limit=5)
 
 # plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
 # plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
 
 
 # hyperopt search
-log("********************** Hyperopt Search **********************")
-htime = time.time()
-trials = Trials()
-best = fmin(create_model, space=search_space_mlp_hyperopt, algo=tpe.suggest, max_evals=num_gen * 2,
-            trials=trials)
-
-scores = []
-for result in trials.results:
-    scores.append(result['loss'])
-
-# print(scores)
-min_idx = np.argmin(scores)
-log("hyperopt best", scores[min_idx], '--', trials.results[min_idx]['params'])
-plot_iterable(best_scores=scores)
-
+# log("********************** Hyperopt Search **********************")
+# htime = time.time()
+# trials = Trials()
+# best = fmin(create_model, space=search_space_mlp_hyperopt, algo=tpe.suggest, max_evals=num_gen * 2,
+#             trials=trials)
+#
+# scores = []
+# for result in trials.results:
+#     scores.append(result['loss'])
+#
+# # print(scores)
+# min_idx = np.argmin(scores)
+# log("hyperopt best", scores[min_idx], '--', trials.results[min_idx]['params'])
+# plot_iterable(best_scores=scores)
 
 # Random search
 # log("********************** Random Search **********************")
