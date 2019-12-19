@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1ae03a1f-82e0-4c68-8673-2372e0e02732" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ga_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ga_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,7 +52,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests for utils_test.UtilsTest.test_get_key_in_nested_dict">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="GAHyperParamTuning" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -130,8 +132,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests for utils_test.UtilsTest.test_get_key_in_nested_dict" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python tests.Unittests for utils_test.UtilsTest.test_get_key_in_nested_dict" />
         <item itemvalue="Python tests.Unittests in tests" />
         <item itemvalue="Python tests.Unittests for population_test.PopulationTest" />
         <item itemvalue="Python tests.Unittests for population_test.PopulationTest.test_add_individual" />
@@ -186,6 +188,16 @@
           <url>file://$PROJECT_DIR$/src/utils.py</url>
           <line>24</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/ga_engine.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/ga_engine.py</url>
+          <line>57</line>
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

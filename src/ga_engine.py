@@ -7,6 +7,7 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
+import datetime
 
 from ga_abstract import GAAbstract
 from population import Population
@@ -37,10 +38,16 @@ class GAEngine(GAAbstract):
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.2
         self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
         func_create_model = kwargs['func_create_model'] if 'func_create_model' in kwargs else None
+        self.patience_count = 0
+        self.prev_population_avg = 0
         self.search_space = search_space
         if self.population_size < 2:
             raise Exception("Need at least 2 individuals to compare")
         self.opt_mode = kwargs['opt_mode'] if 'opt_mode' in kwargs else 'min'
+        if 'target' in kwargs:
+            self._target = kwargs['target']
+        else:
+            self._target = 0.0 if self.opt_mode == 'min' else 1.0
         list_params = None
         if 'init_population' in kwargs:
             init_params = kwargs['init_population']
@@ -59,11 +66,11 @@ class GAEngine(GAAbstract):
 
     @property
     def target(self):
-        pass
+        return self._target
 
     @target.setter
     def target(self, target):
-        pass
+        self._target = target
 
     @property
     def population(self):
@@ -163,11 +170,22 @@ class GAEngine(GAAbstract):
         individual2.set_nn_params(ind2_params)
         return individual1, individual2
 
-    def ga_search(self, only_mutation=False):
+    def ga_search(self, only_mutation=False, patience=15, max_generations=60, time_limit=180):
+        """
+        starts a search for optimal solution
+        :param only_mutation: if True then no crossover is used to find solution.
+        :param patience: number of continuous generations or iterations to wait for before stopping the search,
+        if average fitness score of population doesn't improve
+        :param max_generations: maximum number of generations to search
+        :param time_limit: maximum time duration of search in minutes
+        :return: current generation count, best fitness score, corresponding best parameter
+        """
         count = 0
         # mul = get_mode_multiplier(self.opt_mode)
         best_score = -np.inf
         start_time = time.time()
+        start_time_epoch = datetime.datetime.now()
+        self.prev_population_avg = 0
         while True:
             log("Generation Start:", count)
             prev_best_score = self.population.get_n_best_individual(1).get_fitness_score()
@@ -209,7 +227,9 @@ class GAEngine(GAAbstract):
             avg = mean(self.population.get_fitness_scores())
             log("All scores", self.population.get_fitness_scores(), "average score:", avg)
             self.on_generation_end(best_score=best_score, avg_score=avg, generation_count=count)
-            if self.func_should_exit(best_score=best_score, generation_count=count, population_avg=avg):
+            if self.func_should_exit(best_score=best_score, generation_count=count, population_avg=avg,
+                                     start_time_epoch=start_time_epoch, max_generations=max_generations,
+                                     time_limit=time_limit, patience=patience):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
@@ -229,8 +249,22 @@ class GAEngine(GAAbstract):
                                                               best_individual.get_nn_params()))
         return best_individual
 
-    def should_exit(self, best_score):
-        return np.abs(best_score) < 0.1
+    def should_exit(self, **kwargs):
+        patience = kwargs['patience']
+        start_time_epoch = kwargs['start_time_epoch']
+        time_limit = kwargs['time_limit']
+        max_generations = kwargs['max_generations']
+        best_score = kwargs['best_score']
+        generation_count = kwargs['generation_count']
+        population_avg = kwargs['population_avg']
+        if self.prev_population_avg >= population_avg:
+            self.patience_count = self.patience_count + 1
+        else:
+            self.patience_count = 0
+        self.prev_population_avg = population_avg
+        return best_score >= self.target or (
+                (datetime.datetime.now() - start_time_epoch).seconds / 60) >= time_limit \
+               or generation_count >= max_generations or self.patience_count >= patience
 
     def update_param_importance(self, params, best_score, prev_best_score):
         log("current gen update params:", params)

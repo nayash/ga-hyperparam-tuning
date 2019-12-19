@@ -82,7 +82,7 @@ from hyperopt import Trials, STATUS_OK, tpe, fmin, hp, rand
 
 # synthetic data params
 search_space_mlp = {
-    'input_size': 784,
+    'input_size': 200,
     'batch_size': [40, 60, 80, 100, 120, 150],
     'layers': [
         {
@@ -116,13 +116,13 @@ search_space_mlp = {
     "lr": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
     "epochs": [3000],
     "optimizer": ["rmsprop", "sgd", "adam"],
-    'output_nodes': 10,
+    'output_nodes': 3,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
 
 search_space_mlp_hyperopt = {
-    'input_size': 784,
+    'input_size': 200,
     'batch_size': hp.choice('bs', [40, 60, 80, 100, 120, 150]),
     'layers': hp.choice('layers_', [
         {
@@ -156,7 +156,7 @@ search_space_mlp_hyperopt = {
     "lr": hp.choice('lr', [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]),
     "epochs": hp.choice('epochs', [3000]),
     "optimizer": hp.choice('opt', ["rmsprop", "sgd", "adam"]),
-    'output_nodes': 10,
+    'output_nodes': 3,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
@@ -212,7 +212,7 @@ def get_synthetic_data():
     return x_train, y_train, x_test, y_test
 
 
-x_train, y_train, x_test, y_test = get_data_mnist()
+x_train, y_train, x_test, y_test = get_synthetic_data()
 
 
 def func_eval(model, **kwargs):
@@ -299,11 +299,13 @@ def create_model(params: dict = None):
             i = str(i + 1)
             if i == '1':
                 model.add(
-                    Dense(params["nodes_layer_" + i], input_shape=(params['input_size'], ), activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                    Dense(params["nodes_layer_" + i], input_shape=(params['input_size'],),
+                          activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                           else None))
             else:
                 model.add(
-                    Dense(params["nodes_layer_" + i], activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
+                    Dense(params["nodes_layer_" + i],
+                          activation=params['activation_layer_' + i] if ('activation_layer_' + i) in params
                           else None))
             if 'do_layer_' + i in params:
                 model.add(Dropout(params['do_layer_' + i]))
@@ -325,30 +327,28 @@ log("Running " + run_id)
 
 # GA search
 log("********************** GA Search **********************")
-num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, exit_check=exit_check,
-                                 on_generation_end=on_generation_end, func_eval=func_eval,
-                                 population_size=5, opt_mode=mode).ga_search()
+num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, on_generation_end=on_generation_end,
+                                 func_eval=func_eval, population_size=5, opt_mode=mode).ga_search(time_limit=5)
 
 # plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
 # plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
 
 
 # hyperopt search
-log("********************** Hyperopt Search **********************")
-htime = time.time()
-trials = Trials()
-best = fmin(create_model, space=search_space_mlp_hyperopt, algo=tpe.suggest, max_evals=num_gen * 2,
-            trials=trials)
-
-scores = []
-for result in trials.results:
-    scores.append(result['loss'])
-
-# print(scores)
-min_idx = np.argmin(scores)
-log("hyperopt best", scores[min_idx], '--', trials.results[min_idx]['params'])
-plot_iterable(best_scores=scores)
-
+# log("********************** Hyperopt Search **********************")
+# htime = time.time()
+# trials = Trials()
+# best = fmin(create_model, space=search_space_mlp_hyperopt, algo=tpe.suggest, max_evals=num_gen * 2,
+#             trials=trials)
+#
+# scores = []
+# for result in trials.results:
+#     scores.append(result['loss'])
+#
+# # print(scores)
+# min_idx = np.argmin(scores)
+# log("hyperopt best", scores[min_idx], '--', trials.results[min_idx]['params'])
+# plot_iterable(best_scores=scores)
 
 # Random search
 # log("********************** Random Search **********************")
