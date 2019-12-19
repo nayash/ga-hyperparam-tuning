@@ -1,14 +1,23 @@
+import sys
 import time
 import numpy as np
+from keras import Sequential
+from keras.layers import Dense, Dropout
 from sklearn.utils import compute_class_weight
 
 from logger import Logger
 from matplotlib import pyplot as plt
 
-_logger = Logger('outputs', 'ga_rs_synthetic_0.02_0.4', 20)
+_logger = Logger('outputs', 'ga_hp_mnist', 20)
 
 
 def get_key_in_nested_dict(nested_dict, target_key):
+    """
+    Traverses the passed dict to find and return the value of target_key in the dict.
+    :param nested_dict: dictionary to search in
+    :param target_key: key you are looking for
+    :return: values of key
+    """
     for key in nested_dict:
         if key == target_key:
             return nested_dict[key]
@@ -23,7 +32,13 @@ def get_key_in_nested_dict(nested_dict, target_key):
 
 
 def choose_from_search_space(search_space_mlp, key=None, params={}):
-    # print("choose_from_ss", '---', search_space_mlp, '---', key, '---', params)
+    """
+    Recursive function which chooses a particular configuration for ANN from a given search space.
+    :param search_space_mlp: whole search space as dict
+    :param key: optional. used to choose a config combination only from values in a key
+    :param params: holds the result across recursion
+    :return: dict which holds the chosen config
+    """
     if type(search_space_mlp) is dict:
         keys = search_space_mlp.keys()
         for _key in keys:
@@ -40,6 +55,14 @@ def choose_from_search_space(search_space_mlp, key=None, params={}):
 
 
 def filter_list_by_prefix(_list, prefix, negation: bool = False):
+    """
+    filter out items from a list of strings based on a prefix. negation=True returns the
+    strings which do not contain the prefix.
+    :param _list: list of strings to filter
+    :param prefix: substring to search for
+    :param negation: pass True if you want strings which don't contain the prefix
+    :return: filtered list
+    """
     if negation:
         return [item for item in _list if not item.startswith(prefix)]
     else:
@@ -123,3 +146,4 @@ def find_replace_index(num, list_nums):
         if num > n:
             return idx
     return -1
+

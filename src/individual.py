@@ -31,7 +31,7 @@ class Individual:
 
     def create_model(self, params: dict = None):
         """
-        Creates a NN model using values in params dict.
+        Creates a Keras NeuralNet model using parameters in 'params' dict.
         :param params: expects a dict with hyper parameters for NN.
         format of 'params' {'batch_size': 100, 'nodes_1': 500, 'do_1': 0.0, 'activation_1': 'sigmoid', 'lr': 1e-07,
         'epochs': 3000, 'optimizer': 'sgd', 'output_nodes': 10, 'output_activation: 'softmax',

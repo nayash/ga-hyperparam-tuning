@@ -24,7 +24,6 @@ class Population:
         self.func_eval = func_eval
         self.mode = mode
         self.individuals = [None] * population_size
-        print("choosing individual from search space...")
         if individuals is None:
             self.individuals = [
                 Individual(choose_from_search_space(search_space), func_create_model=func_create_model).__deepcopy__()
@@ -58,12 +57,25 @@ class Population:
             self.__fitness_scores.append(individual.get_fitness_score())
 
     def get_n_best_individual(self, n) -> Individual:
+        """
+        Returns the nth best individual among current population. Must be > 0.
+        n=1 gives best individual, n=2 gives 2nd best and so on.
+        :param n: rank of individual expected
+        :return: individual of above rank
+        """
         assert n > 0, "argument to this function should be > 0. n=1 gives the best score"
         best_index = np.argsort(self.__fitness_scores)[-n]
         # print("get_n_best", best_index, self.get_individual_values_as_list(), self.fitness_scores)
         return self.individuals[best_index]
 
     def add_individual(self, new_individual, fitness_score=-np.inf):
+        """
+        Replaces the passed individual with the current worst if it's better than the worst individual.
+        If no fitness score is passed then it's calculated internally before comparison.
+        :param new_individual: individual to be checked and added to population
+        :param fitness_score: fitness score of the passed individual.
+        :return: index of population list where individual was inserted, -1 if not inserted
+        """
         worst_index = np.argsort(self.__fitness_scores)[0]  # least fit individual
         if fitness_score == -np.inf:
             new_individual.set_fitness_score(self.calc_fitness_score(new_individual))

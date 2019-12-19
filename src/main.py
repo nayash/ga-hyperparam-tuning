@@ -8,6 +8,10 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
 
+"""
+Entry point of the project. This can be used as an example of how to use this project.
+"""
+
 import os
 import sys
 
@@ -283,7 +287,7 @@ from hyperopt import Trials, STATUS_OK, tpe, fmin, hp, rand
 
 # synthetic data params
 search_space_mlp = {
-    'input_size': 200,
+    'input_size': 784,
     'batch_size': [40, 60, 80, 100, 120, 150],
     'layers': [
         {
@@ -317,13 +321,13 @@ search_space_mlp = {
     "lr": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
     "epochs": [3000],
     "optimizer": ["rmsprop", "sgd", "adam"],
-    'output_nodes': 3,
+    'output_nodes': 10,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
 
 search_space_mlp_hyperopt = {
-    'input_size': 200,
+    'input_size': 784,
     'batch_size': hp.choice('bs', [40, 60, 80, 100, 120, 150]),
     'layers': hp.choice('layers_', [
         {
@@ -357,7 +361,7 @@ search_space_mlp_hyperopt = {
     "lr": hp.choice('lr', [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]),
     "epochs": hp.choice('epochs', [3000]),
     "optimizer": hp.choice('opt', ["rmsprop", "sgd", "adam"]),
-    'output_nodes': 3,
+    'output_nodes': 10,
     'output_activation': 'softmax',
     'loss': 'categorical_crossentropy'
 }
@@ -366,9 +370,9 @@ OUTPUT_PATH = 'outputs'
 
 # exit conditions
 test_loss = 0.01
-test_acc = 0.95
+test_acc = 1.0
 time_limit = 180  # minutes
-gen_count = 50
+gen_count = 60
 patience = 15
 
 mode = 'max'
@@ -380,7 +384,7 @@ start_time = get_readable_ctime()
 start_time_epoch = datetime.datetime.now()
 patience_count = 0
 prev_population_avg = 0
-run_id = 'ga_rs_synthetic_0.02_0.4'  # change utils log prefix
+run_id = 'ga_hp_mnist'  # change utils log prefix
 
 # last one good => 93%
 bad_params_wisconsin = [{'input_size': 30, 'batch_size': 100, 'nodes_layer_1': 435, 'do_layer_1': 0.02040816326530612,
@@ -618,7 +622,7 @@ def get_synthetic_data():
     return x_train, y_train, x_test, y_test
 
 
-x_train, y_train, x_test, y_test = get_synthetic_data()
+x_train, y_train, x_test, y_test = get_data_mnist()
 
 
 def func_eval(model, **kwargs):
@@ -735,7 +739,7 @@ num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, exi
                                  on_generation_end=on_generation_end, func_eval=func_eval,
                                  population_size=5, opt_mode=mode).ga_search()
 
-plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
+# plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
 # plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
 
 
