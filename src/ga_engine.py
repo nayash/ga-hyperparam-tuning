@@ -34,7 +34,7 @@ class GAEngine(GAAbstract):
 
     def __init__(self, search_space, **kwargs):
         self.population_size = kwargs['population_size'] if 'population_size' in kwargs else 5
-        self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.2
+        self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.3
         self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
         func_create_model = kwargs['func_create_model'] if 'func_create_model' in kwargs else None
         self.search_space = search_space
@@ -229,10 +229,13 @@ class GAEngine(GAAbstract):
                                                               best_individual.get_nn_params()))
         return best_individual
 
-    def should_exit(self, best_score):
-        return np.abs(best_score) < 0.1
+    def should_exit(self, **kwargs):
+        generation_count = kwargs['generation_count']
+        # TODO improve default exit check from main
+        return generation_count > 100
 
     def update_param_importance(self, params, best_score, prev_best_score):
+        # TODO look for better scoring
         log("current gen update params:", params)
         delta = best_score - prev_best_score
         for param in params:

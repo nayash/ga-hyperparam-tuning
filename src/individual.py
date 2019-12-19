@@ -19,6 +19,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from utils import *
+import uuid
 
 
 class Individual:
@@ -28,6 +29,7 @@ class Individual:
             'func_create_model'] else self.create_model
         self.__model = self.func_model(nn_prams)
         self.__fitness_score = 0.0
+        self.id = uuid.uuid4().hex
 
     def create_model(self, params: dict = None):
         """
@@ -44,11 +46,11 @@ class Individual:
 
         num_layers = 0
         for key in params.keys():
-            if key.startswith('nodes_'):
+            if key.startswith('nodes_layer_'):
                 num_layers = num_layers + 1
 
         if num_layers == 0:
-            raise Exception("Please specify number of nodes for each layer using format nodes_{layer_number}")
+            raise Exception("Please specify number of nodes for each layer using format nodes_layer_{layer_number}")
 
         try:
             model = Sequential()
