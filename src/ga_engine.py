@@ -39,6 +39,7 @@ class GAEngine(GAAbstract):
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.3
         self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
         func_create_model = kwargs['func_create_model'] if 'func_create_model' in kwargs else None
+        self.use_mt_dna = kwargs['use_mt_dna'] if 'use_mt_dna' in kwargs else True
         self.mt_dna_reset_frequency = kwargs['mt_dna_reset_frequency'] if 'mt_dna_reset_frequency' in kwargs else 3
         self.patience_count = 0
         self.prev_population_avg = 0
@@ -50,15 +51,15 @@ class GAEngine(GAAbstract):
             self._target = kwargs['target']
         else:
             self._target = 0.0 if self.opt_mode == 'min' else 1.0
-        list_params = None
+        list_individuals = None
         if 'init_population' in kwargs:
             init_params = kwargs['init_population']
-            list_params = []
+            list_individuals = []
             for param in init_params:
-                list_params.append(Individual(param))
+                list_individuals.append(Individual(param))
 
         self._population = Population(self.search_space, kwargs['func_eval'], self.opt_mode, self.population_size,
-                                      list_params, func_create_model=func_create_model)
+                                      list_individuals, func_create_model=func_create_model)
         self.on_generation_end = kwargs['on_generation_end'] if 'on_generation_end' in kwargs else \
             self.on_generation_end_dummy()
         self.param_importance = {}
@@ -88,9 +89,9 @@ class GAEngine(GAAbstract):
         second_parent = self.population.get_n_best_individual(second_parent_rank)
         print("second_rank", second_parent_rank)
         count = 0
-        while (first_parent.get_nn_params() == second_parent.get_nn_params() or first_parent.mt_dna == second_parent.mt_dna) \
+        while (first_parent.get_nn_params() == second_parent.get_nn_params() or (
+                first_parent.mt_dna == second_parent.mt_dna and self.use_mt_dna)) \
                 and count < 30:
-            # if rank of both parents same, choose another
             log("calling selection recursive", second_parent_rank, min(5, self.population_size),
                 first_parent.mt_dna, second_parent.mt_dna)
             second_parent_rank = np.random.randint(1, min(5, self.population_size + 1))
@@ -179,9 +180,9 @@ class GAEngine(GAAbstract):
     def ga_search(self, only_mutation=False, patience=15, max_generations=60, time_limit=180):
         """
         starts a search for optimal solution
+
         :param only_mutation: if True then no crossover is used to find solution.
-        :param patience: number of continuous generations or iterations to wait for before stopping the search,
-        if average fitness score of population doesn't improve
+        :param patience: number of continuous generations or iterations to wait for before stopping the search, if average fitness score of population doesn't improve
         :param max_generations: maximum number of generations to search
         :param time_limit: maximum time duration of search in minutes
         :return: current generation count, best fitness score, corresponding best parameter
@@ -194,11 +195,12 @@ class GAEngine(GAAbstract):
         self.prev_population_avg = 0
         while True:
             log("Generation Start:", count)
-            log("mtDNAs-->", ", ".join([individual.mt_dna for individual in self.population.individuals]))
+            log("mtDNAs-->", self.population.get_all_mt_dna())
             prev_best_score = self.population.get_n_best_individual(1).get_fitness_score()
             # selection
             parent1, parent2, second_parent_rank = self.selection()
-            log("selected parents:\n", parent1.get_nn_params(), "\n", parent2.get_nn_params())
+            log("selected parents:\n", parent1.get_nn_params(), parent1.mt_dna, "\n", parent2.get_nn_params(),
+                parent2.mt_dna)
             mutation_prob = np.random.uniform(0, 1)
 
             # TODO tryout other genetic operators listed in Wikipedia article
@@ -244,7 +246,7 @@ class GAEngine(GAAbstract):
                 break
             self.update_param_importance(self.current_generation_updated_params, best_score, prev_best_score)
             self.current_generation_updated_params.clear()
-            if count + 1 % self.mt_dna_reset_frequency == 0:
+            if (count + 1) % self.mt_dna_reset_frequency == 0 and self.use_mt_dna:
                 self.population.reset_mtdna()
             log("Generation End:", count)
             count = count + 1

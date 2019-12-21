@@ -8,7 +8,7 @@ from sklearn.utils import compute_class_weight
 from logger import Logger
 from matplotlib import pyplot as plt
 
-_logger = Logger('outputs', 'ga_hp_mnist', 20)
+_logger = Logger('outputs', 'ga_mt_dna_synth', 20)
 
 
 def get_key_in_nested_dict(nested_dict, target_key):

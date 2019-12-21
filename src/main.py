@@ -179,7 +179,7 @@ start_time = get_readable_ctime()
 start_time_epoch = datetime.datetime.now()
 patience_count = 0
 prev_population_avg = 0
-run_id = 'ga_hp_mnist'  # change utils log prefix
+run_id = 'ga_mt_dna_synth'  # change utils log prefix too
 
 
 def get_data_mnist():
@@ -217,7 +217,7 @@ x_train, y_train, x_test, y_test = get_synthetic_data()
 
 def func_eval(model, **kwargs):
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20, min_delta=0.0001)
-    history = model.fit(x_train, y_train, batch_size=kwargs['batch_size'], epochs=kwargs['epochs'], verbose=2,
+    history = model.fit(x_train, y_train, batch_size=kwargs['batch_size'], epochs=kwargs['epochs'], verbose=1,
                         validation_split=0.3, callbacks=[es])
     val_error = np.amin(history.history['val_loss'])
     train_error = np.amin(history.history['loss'])
@@ -283,7 +283,7 @@ def create_model(params: dict = None):
         params[key] = params['layers'][key]
     params.pop('layers')
 
-    log("hyperopt trail", params)
+    log("hyperopt trial", params)
 
     num_layers = 0
     for key in params.keys():
@@ -327,12 +327,20 @@ log("Running " + run_id)
 
 # GA search
 log("********************** GA Search **********************")
+init_params = [choose_from_search_space(search_space_mlp) for i in range(5)]
 num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, on_generation_end=on_generation_end,
-                                 func_eval=func_eval, population_size=5, opt_mode=mode).ga_search(time_limit=5)
+                                 func_eval=func_eval, population_size=5, opt_mode=mode, use_mt_dna=True,
+                                 init_params=init_params).ga_search(max_generations=40)
 
-# plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
+plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
 # plot_history(pickle.load(open(os.path.join('history_' + start_time), 'rb')))
 
+# No mtDNA used => gave better result (ga_mt_dna_synth_21-12-2019_20_22_56.log)
+num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, on_generation_end=on_generation_end,
+                                 func_eval=func_eval, population_size=5, opt_mode=mode, use_mt_dna=False,
+                                 init_params=init_params).ga_search(max_generations=40)
+
+plot_iterable(best_scores=best_scores, avg_scores=avg_scores)
 
 # hyperopt search
 # log("********************** Hyperopt Search **********************")
@@ -364,3 +372,4 @@ num_gen, score, param = GAEngine(search_space_mlp, mutation_probability=0.4, on_
 
 
 # http://neupy.com/2016/12/17/hyperparameter_optimization_for_neural_networks.html
+# https://www.hindawi.com/journals/jmath/2016/4015845/

@@ -12,6 +12,7 @@ from utils import *
 import numpy as np
 from individual import Individual
 from copy import deepcopy
+import threading
 
 
 # TODO accept function as param for evaluate_model
@@ -24,6 +25,7 @@ class Population:
         self.func_eval = func_eval
         self.mode = mode
         self.individuals = [None] * population_size
+        self.eval_threads = []
         if individuals is None:
             self.individuals = [
                 Individual(choose_from_search_space(search_space), func_create_model=func_create_model).__deepcopy__()
@@ -53,8 +55,17 @@ class Population:
     def calc_fitness_scores(self):
         self.__fitness_scores.clear()
         for individual in self.individuals:
-            individual.set_fitness_score(self.calc_fitness_score(individual))
-            self.__fitness_scores.append(individual.get_fitness_score())
+            self.eval_threads.append(threading.Thread(target=lambda i: self.lambda_call_eval(i), args=(individual, )))
+
+        for t in self.eval_threads:
+            t.start()
+            log("starting eval_thread", t.ident)
+
+
+
+    def lambda_call_eval(self, individual):
+        individual.set_fitness_score(self.calc_fitness_score(individual))
+        self.__fitness_scores.append(individual.get_fitness_score())
 
     def get_n_best_individual(self, n) -> Individual:
         """
@@ -101,4 +112,7 @@ class Population:
         for individual in self.individuals:
             individual.reset_id()
             temp = temp + individual.mt_dna + ","
-        log("reseting mtDNA", temp)
+        log("resetting mtDNA", temp)
+
+    def get_all_mt_dna(self):
+        return ", ".join([i.mt_dna for i in self.individuals])
