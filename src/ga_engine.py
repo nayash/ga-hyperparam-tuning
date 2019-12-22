@@ -39,7 +39,8 @@ class GAEngine(GAAbstract):
         self.mutation_probability = kwargs['mutation_probability'] if 'mutation_probability' in kwargs else 0.3
         self.func_should_exit = kwargs['exit_check'] if 'exit_check' in kwargs else self.should_exit
         func_create_model = kwargs['func_create_model'] if 'func_create_model' in kwargs else None
-        self.use_mt_dna = kwargs['use_mt_dna'] if 'use_mt_dna' in kwargs else True
+        # self.use_mt_dna = kwargs['use_mt_dna'] if 'use_mt_dna' in kwargs else True
+        self.use_mt_dna = False  # it's degrading performance in it's current form.
         self.mt_dna_reset_frequency = kwargs['mt_dna_reset_frequency'] if 'mt_dna_reset_frequency' in kwargs else 3
         self.patience_count = 0
         self.prev_population_avg = 0
